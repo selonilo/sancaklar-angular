@@ -1,0 +1,164 @@
+<div class="game-container">
+
+    <div class="info-bar">
+        <div class="title-section">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                 class="crown-icon">
+                <path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/>
+            </svg>
+            <h1>Dünya Haritası</h1>
+        </div>
+        <div class="controls">
+            <button class="dark-btn" (click)="centerMapTo(centerX, centerY)">
+                <span style="margin-right:4px">⌖</span> Merkeze Dön
+            </button>
+        </div>
+    </div>
+
+    <div class="content-wrapper">
+
+        <div class="map-section">
+            <div class="map-viewport" #mapViewport
+                 (mousedown)="onMouseDown($event)"
+                 (touchstart)="onTouchStart($event)"
+                 (wheel)="onWheel($event)"
+                 [style.--map-scale]="scale"
+                 [style.--map-x.px]="offsetX"
+                 [style.--map-y.px]="offsetY">
+
+                <div class="grid-background"></div>
+
+                <div class="map-layer"
+                     [style.transform]="'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(' + scale + ')'">
+
+                    <ng-container *ngFor="let village of villages; trackBy: trackByVillage">
+                        <div class="village-tile"
+                             [style.left.px]="village.xcoord * tileSize"
+                             [style.top.px]="village.ycoord * tileSize"
+                             [style.width.px]="tileSize"
+                             [style.height.px]="tileSize"
+                             (click)="selectVillage(village, $event)"
+                             [class.selected]="selectedVillage?.id === village.id">
+                            <div class="village-sprite">
+                                <svg viewBox="0 0 100 100" class="village-icon">
+                                    <ellipse cx="50" cy="90" rx="35" ry="8" fill="#000" opacity="0.5"
+                                             filter="blur(4px)"/>
+                                    <ng-container *ngIf="village.points < 3000">
+                                        <rect x="35" y="45" width="30" height="25" fill="#5D4037" stroke="#3E2723"
+                                              stroke-width="2"/>
+                                        <path d="M 30 45 L 50 25 L 70 45 Z" fill="#8D6E63" stroke="#3E2723"
+                                              stroke-width="2"/>
+                                        <rect x="45" y="55" width="10" height="15" fill="#261b17"/>
+                                    </ng-container>
+                                    <ng-container *ngIf="village.points >= 3000 && village.points < 9000">
+                                        <rect x="25" y="40" width="25" height="25" fill="#795548" stroke="#3E2723"
+                                              stroke-width="2"/>
+                                        <path d="M 20 40 L 32.5 25 L 55 40 Z" fill="#A1887F" stroke="#3E2723"
+                                              stroke-width="2"/>
+                                        <rect x="55" y="30" width="35" height="40" fill="#6D4C41" stroke="#3E2723"
+                                              stroke-width="2"/>
+                                        <path d="M 50 30 L 72.5 10 L 95 30 Z" fill="#8D6E63" stroke="#3E2723"
+                                              stroke-width="2"/>
+                                        <rect x="65" y="50" width="15" height="20" fill="#3E2723"/>
+                                    </ng-container>
+                                    <ng-container *ngIf="village.points >= 9000">
+                                        <path d="M 10 70 L 90 70 L 90 85 L 10 85 Z" fill="#546E7A" stroke="#263238"
+                                              stroke-width="2"/>
+                                        <rect x="5" y="60" width="15" height="25" fill="#455A64" stroke="#263238"
+                                              stroke-width="2"/>
+                                        <path d="M 0 60 L 12.5 50 L 25 60 Z" fill="#8f2424"/>
+                                        <rect x="80" y="60" width="15" height="25" fill="#455A64" stroke="#263238"
+                                              stroke-width="2"/>
+                                        <path d="M 75 60 L 87.5 50 L 100 60 Z" fill="#8f2424"/>
+                                        <rect x="30" y="30" width="40" height="40" fill="#607D8B" stroke="#263238"
+                                              stroke-width="2"/>
+                                        <path d="M 25 30 L 50 5 L 75 30 Z" fill="#37474F" stroke="#263238"
+                                              stroke-width="2"/>
+                                    </ng-container>
+                                    <circle cx="85" cy="20" r="7" [attr.fill]="getPlayerColor(village.playerId)"
+                                            stroke="#000" stroke-width="2"/>
+                                </svg>
+                                <div class="village-label">{{ village.name }}</div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="selectedVillage"
+                     class="map-popup"
+                     [style.left.px]="popupPosition.x"
+                     [style.top.px]="popupPosition.y">
+                    <div class="popup-header">
+                        <span>{{ selectedVillage.name }}</span>
+                        <button class="close-btn" (click)="closePopup()">✕</button>
+                    </div>
+                    <div class="popup-content">
+                        <div class="coord-tag">X:{{ selectedVillage.xcoord }} | Y:{{ selectedVillage.ycoord }}</div>
+                        <div class="info-row"><span>Puan:</span> <strong>{{ selectedVillage.points | number }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Lord:</span>
+                            <strong class="text-player" [class.text-gray-400]="!selectedVillage.playerName">
+                                {{ selectedVillage.playerName || 'Sahipsiz' }}
+                            </strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Klan:</span>
+                            <strong class="text-ally">
+                                {{ selectedVillage.allianceName || '-' }}
+                            </strong>
+                        </div>
+                        <div class="popup-actions">
+                            <button class="btn-action btn-attack">⚔ Saldır</button>
+                            <button class="btn-action btn-support">🛡 Destekle</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="side-panel">
+
+            <div class="coords-box">
+                <div class="coords-title">KONUM</div>
+                <div class="coords-values">
+                    <span>X: {{ getCurrentCenter().x }}</span>
+                    <span>Y: {{ getCurrentCenter().y }}</span>
+                </div>
+            </div>
+
+            <div class="minimap-container">
+                <div class="minimap-wrapper"
+                     (mousedown)="onMinimapClick($event)"
+                     [style.width.px]="minimapSize"
+                     [style.height.px]="minimapSize">
+                    <div *ngFor="let v of villages"
+                         class="mini-dot"
+                         [style.left.%]="(v.xcoord / worldSize) * 100"
+                         [style.top.%]="(v.ycoord / worldSize) * 100"
+                         [style.background-color]="getPlayerColor(v.playerId)">
+                    </div>
+                    <div class="viewport-indicator"
+                         [style.left.px]="getViewportIndicator().x"
+                         [style.top.px]="getViewportIndicator().y"
+                         [style.width.px]="getViewportIndicator().w"
+                         [style.height.px]="getViewportIndicator().h">
+                    </div>
+                </div>
+            </div>
+
+            <div class="selection-info" *ngIf="selectedVillage">
+                <h4>{{ selectedVillage.name }}</h4>
+                <p class="text-xs text-muted">Seçili Hedef</p>
+            </div>
+
+            <div class="selection-info empty" *ngIf="!selectedVillage">
+                <p class="text-xs text-muted text-center">Haritadan bir köy seçin.</p>
+            </div>
+
+        </div>
+
+    </div>
+</div>

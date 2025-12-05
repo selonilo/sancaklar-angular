@@ -1,0 +1,122 @@
+<div
+    class="relative min-h-screen overflow-hidden bg-gradient-to-b from-background via-background to-background/95 text-foreground">
+
+    <div class="absolute inset-0 bg-[url('/assets/images/medieval-castle.jpg')] bg-cover bg-center opacity-20"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
+
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div *ngFor="let particle of particles"
+             class="absolute animate-float h-1 w-1 rounded-full bg-primary/20"
+             [style.left]="particle.left"
+             [style.top]="particle.top"
+             [style.animation-delay]="particle.delay"
+             [style.animation-duration]="particle.duration">
+        </div>
+    </div>
+
+    <nav class="relative z-10 border-b border-border/40 bg-card/30 backdrop-blur-sm">
+        <div class="container mx-auto flex h-16 items-center justify-between px-4">
+
+            <div class="flex items-center gap-2">
+
+                <img src="assets/images/logo/sancaklar_logo.png"
+                     alt="Sancaklar Logo"
+                     class="h-14 w-auto object-contain drop-shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300"
+                     routerLink="/">
+
+                <span class="font-cinzel text-2xl font-bold tracking-wider text-primary cursor-pointer drop-shadow-md"
+                      routerLink="/">
+        SANCAKLAR
+      </span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a routerLink="/login"
+                   class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 text-muted-foreground hover:text-foreground cursor-pointer">
+                    Giriş Yap
+                </a>
+                <a routerLink="/register"
+                   class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 font-semibold cursor-pointer">
+                    Kayıt Ol
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10">
+        <div class="container mx-auto px-4 py-20 md:py-32">
+            <div class="mx-auto max-w-5xl text-center">
+
+                <div
+                    class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/5 px-4 py-2 text-sm text-primary backdrop-blur-sm">
+                    <img src="assets/images/logo/sancaklar_logo.png"
+                         alt="Sancaklar"
+                         class="h-5 w-auto object-contain drop-shadow-sm">
+
+                    <span>Ortaçağ Strateji Oyunu</span>
+                </div>
+
+                <h1 class="mb-6 font-cinzel text-5xl font-bold leading-tight tracking-tight text-foreground md:text-7xl lg:text-8xl">
+          <span class="bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+            İmparatorluğunu
+          </span>
+                    <br/>
+                    <span class="text-foreground">İnşa Et</span>
+                </h1>
+
+                <p class="mx-auto mb-10 max-w-2xl text-balance text-lg leading-relaxed text-muted-foreground md:text-xl">
+                    Köyünü kur, kaynaklarını topla, ordunu büyüt ve sancağını dünyanın dört bir yanına dalgalandır.
+                    Stratejin
+                    ve cesaretinle rakiplerini alt et.
+                </p>
+
+                <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                    <a routerLink="/register"
+                       class="group inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-12 bg-primary px-8 text-base font-semibold text-primary-foreground hover:bg-primary/90 cursor-pointer">
+                        Hemen Başla
+                        <lucide-icon name="chevron-right"
+                                     class="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1"></lucide-icon>
+                    </a>
+                    <a routerLink="/login"
+                       class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input shadow-sm h-12 border-border/60 px-8 text-base font-semibold hover:border-primary/50 hover:bg-primary/5 bg-transparent cursor-pointer">
+                        Giriş Yap
+                    </a>
+                </div>
+            </div>
+
+            <div class="mx-auto mt-24 grid max-w-6xl gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <div *ngFor="let feature of features"
+                     class="group relative overflow-hidden rounded-xl border border-border/40 bg-card/40 p-6 backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-card/60">
+                    <div
+                        class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+
+                    <lucide-icon [name]="feature.iconName"
+                                 class="mb-4 h-10 w-10 text-primary transition-transform group-hover:scale-110"></lucide-icon>
+
+                    <h3 class="mb-2 font-cinzel text-xl font-semibold text-foreground">
+                        {{ feature.title }}
+                    </h3>
+                    <p class="text-sm leading-relaxed text-muted-foreground">{{ feature.desc }}</p>
+                </div>
+            </div>
+
+            <div
+                class="mx-auto mt-24 max-w-4xl rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-accent/5 p-8 backdrop-blur-sm md:p-12">
+                <div class="grid gap-8 md:grid-cols-3">
+                    <div *ngFor="let stat of stats" class="text-center">
+                        <div class="mb-2 font-cinzel text-4xl font-bold text-primary md:text-5xl">
+                            {{ stat.value }}
+                        </div>
+                        <div class="text-sm font-medium text-muted-foreground">{{ stat.label }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="relative z-10 border-t border-border/40 bg-card/30 py-8 backdrop-blur-sm">
+        <div class="container mx-auto px-4 text-center text-sm text-muted-foreground">
+            <p>&copy; 2025 Sancaklar. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+</div>

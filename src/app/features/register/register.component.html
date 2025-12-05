@@ -1,0 +1,100 @@
+<div class="relative min-h-screen w-full overflow-hidden flex items-center justify-center font-sans">
+
+    <a routerLink="/" class="absolute top-6 left-6 z-50 group flex items-center gap-2 px-4 py-2 rounded-full bg-black/20 hover:bg-black/40 border border-white/5 hover:border-primary/50 backdrop-blur-md transition-all duration-300 hover:pr-6 cursor-pointer">
+        <lucide-icon name="arrow-left" class="h-4 w-4 text-gray-400 group-hover:text-primary transition-transform duration-300 group-hover:-translate-x-1"></lucide-icon>
+        <span class="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Ana Sayfa</span>
+    </a>
+
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599707367072-cd6ad66acc40?q=80&w=2600&auto=format&fit=crop')] bg-cover bg-center animate-subtle-zoom"></div>
+        <div class="absolute inset-0 bg-black/60 bg-gradient-to-t from-black via-black/40 to-black/60"></div>
+    </div>
+
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="firefly"></div> <div class="firefly"></div> <div class="firefly"></div>
+        <div class="firefly"></div> <div class="firefly"></div> <div class="firefly"></div>
+        <div class="firefly"></div> <div class="firefly"></div> <div class="firefly"></div>
+        <div class="firefly"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md animate-in fade-in zoom-in duration-500">
+
+        <div class="bg-black/40 backdrop-blur-md text-white shadow-2xl rounded-xl border border-white/10 overflow-hidden">
+
+            <div class="flex flex-col items-center space-y-1.5 p-8 pb-4 text-center">
+
+                <img src="assets/images/logo/sancaklar_logo.png"
+                     alt="Sancaklar Logo"
+                     class="h-24 w-auto object-contain mb-4 drop-shadow-[0_0_20px_rgba(251,191,36,0.6)] hover:scale-105 transition-transform duration-500">
+
+                <h3 class="font-cinzel text-3xl font-bold tracking-widest text-primary drop-shadow-sm">SANCAKLAR</h3>
+                <p class="text-sm text-gray-400">İmparatorluğunu kurmaya hemen başla</p>
+            </div>
+
+            <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+                <div class="p-8 pt-2 space-y-5">
+
+                    <div *ngIf="errorMessage" class="p-3 rounded bg-red-500/10 border border-red-500/20 text-red-200 text-sm flex items-center gap-2 animate-pulse">
+                        <lucide-icon name="alert-circle" class="h-4 w-4 shrink-0"></lucide-icon>
+                        <span>{{ errorMessage }}</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">Kullanıcı Adı</label>
+                        <div class="relative group">
+                            <lucide-icon name="user" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                            <input id="username" type="text" formControlName="username" placeholder="Lord" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300" />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">E-posta</label>
+                        <div class="relative group">
+                            <lucide-icon name="mail" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                            <input id="email" type="email" formControlName="email" placeholder="lord@sancaklar.com" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300" />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">Şifre</label>
+                        <div class="relative group">
+                            <lucide-icon name="lock" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                            <input id="password" type="password" formControlName="password" placeholder="••••••••" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300" />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">Şifre Tekrar</label>
+                        <div class="relative group">
+                            <lucide-icon name="lock" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                            <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-4 p-8 pt-0">
+                    <button type="submit" [disabled]="isLoading" class="group relative w-full h-12 overflow-hidden rounded-lg bg-primary text-primary-foreground font-semibold shadow-lg transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none">
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+                        <div class="flex items-center justify-center gap-2">
+                            <ng-container *ngIf="isLoading; else btnText">
+                                <lucide-icon name="loader-2" class="h-5 w-5 animate-spin"></lucide-icon>
+                                <span>Kayıt Olunuyor...</span>
+                            </ng-container>
+                            <ng-template #btnText>
+                                <span>Sancağını Dalgalandır</span>
+                                <lucide-icon name="sword" class="h-4 w-4"></lucide-icon>
+                            </ng-template>
+                        </div>
+                    </button>
+
+                    <div class="text-sm text-center text-gray-400">
+                        Zaten bir lord musun?
+                        <a routerLink="/login" class="text-primary hover:text-primary/80 hover:underline font-semibold cursor-pointer transition-colors ml-1">
+                            Giriş Yap
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

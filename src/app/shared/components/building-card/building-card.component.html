@@ -1,0 +1,109 @@
+<div class="rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-shadow relative overflow-hidden"
+     [class.hover:shadow-md]="canUpgrade"
+     [class.border-primary-20]="canUpgrade">
+
+    <!-- KÖY İSMİ GÜNCELLEME ALANI (Header - Sadece Merkez Binası İçin) -->
+    <div *ngIf="type === 'headquarters'" class="border-b bg-muted/30 px-6 py-3 flex items-center justify-between gap-4">
+        <div class="flex items-center gap-2 text-muted-foreground">
+            <lucide-icon name="pencil" class="h-4 w-4"></lucide-icon>
+            <span class="text-xs font-semibold uppercase tracking-wider">Köy Adı</span>
+        </div>
+
+        <div class="flex flex-1 items-center gap-2 max-w-[240px]">
+            <input type="text"
+                   [(ngModel)]="village.name"
+                   class="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring placeholder:text-muted-foreground/50"
+                   placeholder="Köy ismi giriniz">
+            <button (click)="updateVillageName()"
+                    [disabled]="isUpdating || !village.name"
+                    class="inline-flex items-center justify-center rounded-md h-8 w-8 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 shrink-0">
+                <lucide-icon *ngIf="!isUpdating" name="save" class="h-4 w-4"></lucide-icon>
+                <lucide-icon *ngIf="isUpdating" name="loader-2" class="h-4 w-4 animate-spin"></lucide-icon>
+            </button>
+        </div>
+    </div>
+    <!-- KÖY İSMİ GÜNCELLEME SONU -->
+
+    <!-- Bina Bilgileri -->
+    <div class="flex flex-col space-y-1.5 p-6 pb-2">
+        <div class="flex items-start justify-between">
+            <div class="space-y-1 flex-1">
+                <h3 class="font-semibold leading-none tracking-tight flex items-center gap-2">
+                    <lucide-icon [name]="getIconName()" class="h-6 w-6"></lucide-icon>
+                    <span>{{ buildingInfo.name }}</span>
+                </h3>
+                <p class="text-sm text-muted-foreground"
+                   *ngIf="buildingInfo.description">{{ buildingInfo.description }}</p>
+            </div>
+
+            <div class="flex flex-col items-end gap-1">
+                <div class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"
+                     [ngClass]="currentLevel === 0 ? 'border-transparent bg-secondary text-secondary-foreground' : 'text-foreground'">
+                    Seviye {{ currentLevel }}
+                </div>
+
+                <div *ngIf="targetLevel > currentLevel" class="text-[10px] text-emerald-500 font-medium animate-pulse">
+                    (Hedef: {{ targetLevel - 1 }})
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Maliyet ve Gereksinimler -->
+    <div class="p-6 pt-2 space-y-3">
+        <ng-container *ngIf="targetLevel < 30; else maxLevelTpl">
+
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <p class="text-sm font-semibold text-muted-foreground">Seviye {{ nextLevelDisplay }}
+                        Gereksinimleri:</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2 bg-muted/50 p-2 rounded-lg">
+                    <div class="flex items-center gap-2 text-sm"
+                         [ngClass]="village.resources.woodAmount >= cost.wood ? 'text-green-600 dark:text-green-400' : 'text-red-500'">
+                        <lucide-icon name="tree-deciduous" class="h-4 w-4"></lucide-icon>
+                        <span class="font-medium">{{ cost.wood | number:'1.0-0' }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-sm"
+                         [ngClass]="village.resources.meatAmount >= cost.meat ? 'text-red-600 dark:text-red-400' : 'text-red-500'">
+                        <lucide-icon name="beef" class="h-4 w-4"></lucide-icon>
+                        <span class="font-medium">{{ cost.meat | number:'1.0-0' }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-sm"
+                         [ngClass]="village.resources.ironAmount >= cost.iron ? 'text-slate-600 dark:text-slate-400' : 'text-red-500'">
+                        <lucide-icon name="pickaxe" class="h-4 w-4"></lucide-icon>
+                        <span class="font-medium">{{ cost.iron | number:'1.0-0' }}</span>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400">
+                        <lucide-icon name="clock" class="h-4 w-4"></lucide-icon>
+                        <span class="font-medium">{{ formatTime(cost.time) }}</span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-template #maxLevelTpl>
+            <div class="p-4 bg-muted/50 rounded-lg text-center">
+                <p class="text-sm font-medium text-muted-foreground">Maksimum seviyeye ulaşıldı</p>
+            </div>
+        </ng-template>
+    </div>
+
+    <!-- Yükselt Butonu -->
+    <div class="flex items-center p-6 pt-0">
+        <button *ngIf="targetLevel < 30"
+                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 w-full"
+                [ngClass]="canUpgrade ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'"
+                [disabled]="!canUpgrade"
+                (click)="onUpgradeClick()">
+
+            <lucide-icon name="arrow-up" class="h-4 w-4 mr-2"></lucide-icon>
+            {{ targetLevel === 0 ? "İnşa Et" : "Seviye " + nextLevelDisplay + " Yükselt" }}
+        </button>
+    </div>
+</div>

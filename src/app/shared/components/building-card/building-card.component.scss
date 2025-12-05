@@ -1,0 +1,31 @@
+// src/app/shared/components/building-card/building-card.component.scss
+
+// :host seçicisi, bileşenin kendisini temsil eder (React'teki wrapper div gibi düşün)
+:host {
+  display: block;
+  height: 100%; // Kartların grid içinde eşit boyda uzaması için
+}
+
+// Kartın içindeki ikonların varsayılan hizalamasını garantiye alalım
+lucide-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Eğer "Yetersiz Kaynak" durumunda metnin titremesini (shake animation) istersen:
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+.text-red-500 {
+  // Kaynak yetersizse hafifçe belirginleştir (Opsiyonel)
+  transition: color 0.3s ease;
+}
+
+// Tailwind'in animate-spin'i bazen ikonlarda merkez kaçıklığı yapabilir, düzeltelim:
+.animate-spin {
+  transform-origin: center;
+}

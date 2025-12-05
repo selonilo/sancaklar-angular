@@ -1,0 +1,106 @@
+/* 1. Fontu yüklüyoruz (Cinzel: Orta çağ başlıkları için) */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap'); /* Okunabilir metinler için */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        /* --- ORTA ÇAĞ ATMOSFERİ (Warm Medieval Dark Theme) --- */
+
+        /* Renk Mantığı (HSL):
+           Hue 28-40 arası: Sıcak Kahve/Turuncu tonları
+           Saturation: Düşük tutularak "eski" havası veriliyor.
+        */
+
+        /* Arka Plan: Çok koyu, yanık kahve (Neredeyse siyah ama sıcak) */
+        --background: 28 20% 8%;
+
+        /* Yazılar: Eskimiş Parşömen Rengi (Tam beyaz değil) */
+        --foreground: 36 30% 85%;
+
+        /* Kartlar/Paneller: Arka plandan bir tık açık, koyu ahşap tonu */
+        --card: 28 15% 11%;
+        --card-foreground: 36 30% 85%;
+
+        /* Pop-up ve Menüler */
+        --popover: 28 15% 11%;
+        --popover-foreground: 36 30% 85%;
+
+        /* ANA RENK (Primary): Antik Altın / Bronz */
+        /* Butonlar ve önemli vurgular için */
+        --primary: 42 72% 52%; /* #da9f25 */
+        --primary-foreground: 28 20% 10%; /* Altının üstüne koyu yazı */
+
+        /* İKİNCİL RENK (Secondary): Eskimiş Demir / Koyu Taş */
+        --secondary: 30 15% 20%;
+        --secondary-foreground: 36 30% 85%;
+
+        /* Sessiz Metinler: Soluk Kahve/Gri */
+        --muted: 30 15% 18%;
+        --muted-foreground: 30 10% 55%;
+
+        /* Vurgu (Hover durumları): Hafif aydınlanmış kahve */
+        --accent: 30 15% 22%;
+        --accent-foreground: 36 30% 85%;
+
+        /* Tehlike/Saldırı: Kan Kırmızısı (Parlak değil, koyu) */
+        --destructive: 0 65% 40%;
+        --destructive-foreground: 0 0% 95%;
+
+        /* Kenarlıklar: Paslı Çerçeve */
+        --border: 30 20% 18%;
+        --input: 30 20% 16%;
+
+        /* Focus Halkası: Altın Işıltısı */
+        --ring: 42 72% 52%;
+
+        /* Yuvarlaklık: Hafif yumuşak köşeler */
+        --radius: 0.5rem;
+    }
+
+    /* .dark class'ı olsa bile oyunun teması sabit kalsın diye aynısını tutuyoruz */
+    .dark {
+        --background: 28 20% 8%;
+        --foreground: 36 30% 85%;
+        --card: 28 15% 11%;
+        --card-foreground: 36 30% 85%;
+        --popover: 28 15% 11%;
+        --popover-foreground: 36 30% 85%;
+        --primary: 42 72% 52%;
+        --primary-foreground: 28 20% 10%;
+        --secondary: 30 15% 20%;
+        --secondary-foreground: 36 30% 85%;
+        --muted: 30 15% 18%;
+        --muted-foreground: 30 10% 55%;
+        --accent: 30 15% 22%;
+        --accent-foreground: 36 30% 85%;
+        --destructive: 0 65% 40%;
+        --destructive-foreground: 0 0% 95%;
+        --border: 30 20% 18%;
+        --input: 30 20% 16%;
+        --ring: 42 72% 52%;
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground font-sans; /* Genel yazı tipi sans-serif (Inter) olsun */
+
+        /* Ekrana derinlik katan hafif bir "Vignette" (Köşe karartma) efekti */
+        background-image: radial-gradient(circle at center, hsla(28, 20%, 12%, 0.8) 0%, hsl(28, 20%, 8%) 100%);
+        background-attachment: fixed;
+        min-height: 100vh;
+    }
+
+    /* Başlıkları ve özel alanları "Cinzel" fontuyla süsle */
+    h1, h2, h3, h4, h5, h6, .font-cinzel {
+        font-family: 'Cinzel', serif;
+    }
+}

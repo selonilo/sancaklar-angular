@@ -1,0 +1,82 @@
+<div class="rounded-xl border border-border bg-card text-card-foreground shadow-sm">
+    <div class="flex flex-col space-y-1.5 p-6">
+        <h3 class="font-semibold leading-none tracking-tight">İnşaat Kuyruğu</h3>
+    </div>
+    <div class="p-6 pt-0">
+        <div *ngIf="constructions.length === 0" class="text-sm text-muted-foreground">
+            Şu an devam eden inşaat yok.
+        </div>
+
+        <div *ngFor="let c of constructions"
+             class="flex flex-col gap-2 py-3 border-b border-border/50 last:border-0">
+
+            <div class="flex justify-between items-center w-full">
+                <div class="flex items-center gap-2">
+                    <lucide-icon name="hammer" class="h-4 w-4 text-primary animate-pulse"></lucide-icon>
+                    <span class="font-medium text-sm">{{ buildingsConfig[c.buildingType]?.name || c.buildingType }}</span>
+                    <span class="text-[10px] px-2 py-0.5 bg-secondary text-secondary-foreground rounded-full font-semibold">
+                      Seviye {{ c.targetLevel }}
+                  </span>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-xs font-mono font-medium text-primary bg-primary/10 px-2 py-1 rounded">
+                      {{ formatTime(c.remainingSeconds) }}
+                    </span>
+
+                    <button (click)="openCancelModal(c.id)"
+                            title="İnşaatı İptal Et"
+                            class="group p-1.5 rounded-md hover:bg-red-500/10 transition-colors cursor-pointer">
+                        <lucide-icon name="trash-2"
+                                     class="h-4 w-4 text-muted-foreground group-hover:text-red-500 transition-colors">
+                        </lucide-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
+                <div class="h-full bg-primary rounded-full transition-all duration-1000 ease-linear"
+                     [style.width.%]="getProgress(c)">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all">
+
+    <div class="bg-card text-card-foreground border border-border w-full max-w-md rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+
+        <div class="p-6 pb-4">
+            <div class="flex items-center gap-4">
+                <div class="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold leading-6">İnşaatı İptal Et</h3>
+                    <p class="text-sm text-muted-foreground mt-1">
+                        Bu inşaatı kuyruktan kaldırmak istediğine emin misin?
+                        <br>
+                        <span class="text-green-600 font-medium">Harcanan kaynaklar iade edilecektir.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-secondary/20 px-6 py-4 flex flex-row-reverse gap-3">
+
+            <button (click)="confirmCancel()"
+                    class="inline-flex justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:w-auto transition-colors">
+                Evet, İptal Et
+            </button>
+
+            <button (click)="closeModal()"
+                    class="inline-flex justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto transition-colors">
+                Vazgeç
+            </button>
+        </div>
+    </div>
+</div>

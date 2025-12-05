@@ -1,0 +1,176 @@
+<div class="relative min-h-screen w-full overflow-hidden flex items-center justify-center font-sans p-4">
+
+    <a routerLink="/" class="absolute top-6 left-6 z-50 group flex items-center gap-2 px-4 py-2 rounded-full bg-black/20 hover:bg-black/40 border border-white/5 hover:border-primary/50 backdrop-blur-md transition-all duration-300 hover:pr-6 cursor-pointer">
+        <lucide-icon name="arrow-left" class="h-4 w-4 text-gray-400 group-hover:text-primary transition-transform duration-300 group-hover:-translate-x-1"></lucide-icon>
+        <span class="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Ana Sayfa</span>
+    </a>
+
+    <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1599707367072-cd6ad66acc40?q=80&w=2600&auto=format&fit=crop')] bg-cover bg-center animate-subtle-zoom"></div>
+        <div class="absolute inset-0 bg-black/60 bg-gradient-to-t from-black via-black/40 to-black/60"></div>
+    </div>
+
+    <div class="absolute inset-0 z-0 pointer-events-none">
+        <div class="firefly"></div> <div class="firefly"></div> <div class="firefly"></div>
+        <div class="firefly"></div> <div class="firefly"></div> <div class="firefly"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center animate-in fade-in zoom-in duration-500">
+
+        <div class="hidden lg:flex flex-col gap-8 text-left text-white">
+
+            <div class="space-y-4">
+                <div class="flex items-center gap-6">
+
+                    <img src="assets/images/logo/sancaklar_logo.png"
+                         alt="Sancaklar Logo"
+                         class="h-32 w-auto object-contain drop-shadow-[0_0_25px_rgba(251,191,36,0.6)] hover:scale-110 transition-transform duration-500">
+
+                    <h1 class="font-cinzel text-6xl font-bold tracking-widest text-primary drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">SANCAKLAR</h1>
+                </div>
+                <p class="text-2xl text-gray-300 font-light tracking-wide pl-2">Ortaçağ stratejisinin yeni çağına hoş geldin.</p>
+            </div>
+
+            <div class="grid gap-6 mt-4">
+                <div class="flex items-start gap-5 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors backdrop-blur-sm">
+                    <div class="p-3 rounded-lg bg-primary/20 ring-1 ring-primary/30">
+                        <lucide-icon name="shield" class="h-6 w-6 text-primary"></lucide-icon>
+                    </div>
+                    <div>
+                        <h3 class="font-cinzel text-lg font-bold text-white mb-1">Köyünü Kur</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Binalarını geliştir, hammadde üretimini yönet ve halkının refahını sağla.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-5 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors backdrop-blur-sm">
+                    <div class="p-3 rounded-lg bg-red-500/20 ring-1 ring-red-500/30">
+                        <lucide-icon name="swords" class="h-6 w-6 text-red-400"></lucide-icon>
+                    </div>
+                    <div>
+                        <h3 class="font-cinzel text-lg font-bold text-white mb-1">Ordu Oluştur</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Mızraklı piyadelerden ağır süvarilere kadar ordunu eğit ve savaşa hazırlan.</p>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-5 p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors backdrop-blur-sm">
+                    <div class="p-3 rounded-lg bg-amber-500/20 ring-1 ring-amber-500/30">
+                        <lucide-icon name="castle" class="h-6 w-6 text-amber-400"></lucide-icon>
+                    </div>
+                    <div>
+                        <h3 class="font-cinzel text-lg font-bold text-white mb-1">Dünyayı Fethet</h3>
+                        <p class="text-sm text-gray-400 leading-relaxed">Komşularını yağmala, klanını kur ve haritanın tek hakimi ol.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto">
+            <div class="bg-black/40 backdrop-blur-md text-white shadow-2xl rounded-xl border border-white/10 overflow-hidden">
+
+                <div class="lg:hidden flex flex-col items-center pt-8 pb-2">
+                    <img src="assets/images/logo/sancaklar_logo.png"
+                         alt="Sancaklar Logo"
+                         class="h-24 w-auto object-contain mb-4 drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]">
+
+                    <h2 class="font-cinzel text-3xl font-bold text-primary">SANCAKLAR</h2>
+                </div>
+
+                <div class="p-8 pb-4">
+                    <h2 class="text-2xl font-semibold tracking-tight">Giriş Yap</h2>
+                    <p class="text-sm text-gray-400 mt-1">Savaş meydanlarına geri dön</p>
+                </div>
+
+                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <div class="p-8 pt-2 space-y-5">
+
+                        <div *ngIf="errorMessage" class="p-3 rounded bg-red-500/10 border border-red-500/20 text-red-200 text-sm flex items-center gap-2 animate-pulse">
+                            <lucide-icon name="alert-circle" class="h-4 w-4 shrink-0"></lucide-icon>
+                            <span>{{ errorMessage }}</span>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">Kullanıcı Adı</label>
+                            <div class="relative group">
+                                <lucide-icon name="user" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                                <input id="username" type="text" formControlName="username" placeholder="LordSalih" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300" />
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">Şifre</label>
+                                <button type="button" (click)="openForgotPassword()" class="text-xs text-primary hover:text-primary/80 transition-colors cursor-pointer hover:underline">
+                                    Şifremi Unuttum?
+                                </button>
+                            </div>
+                            <div class="relative group">
+                                <lucide-icon name="lock" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                                <input id="password" type="password" formControlName="password" placeholder="••••••••" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-4 p-8 pt-0">
+                        <button type="submit" [disabled]="isLoading" class="group relative w-full h-12 overflow-hidden rounded-lg bg-primary text-primary-foreground font-semibold shadow-lg transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none">
+                            <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></div>
+                            <div class="flex items-center justify-center gap-2">
+                                <ng-container *ngIf="isLoading; else btnText">
+                                    <lucide-icon name="loader-2" class="h-5 w-5 animate-spin"></lucide-icon>
+                                    <span>Giriş Yapılıyor...</span>
+                                </ng-container>
+                                <ng-template #btnText>
+                                    <span>Giriş Yap</span>
+                                    <lucide-icon name="swords" class="h-4 w-4"></lucide-icon>
+                                </ng-template>
+                            </div>
+                        </button>
+
+                        <div class="text-sm text-center text-gray-400">
+                            Henüz ordunu kurmadın mı?
+                            <a routerLink="/register" class="text-primary hover:text-primary/80 hover:underline font-semibold cursor-pointer transition-colors ml-1">
+                                Kayıt Ol
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isForgotPasswordOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" (click)="closeForgotPassword()"></div>
+        <div class="relative w-full max-w-md bg-[#0f0f13] border border-white/10 rounded-xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+            <div class="p-6 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <h3 class="font-cinzel text-xl font-bold text-primary flex items-center gap-2">
+                    <lucide-icon name="key-round" class="h-5 w-5"></lucide-icon>
+                    Şifre Yenileme
+                </h3>
+                <button (click)="closeForgotPassword()" class="text-gray-400 hover:text-white transition-colors">
+                    <lucide-icon name="x" class="h-5 w-5"></lucide-icon>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <p class="text-sm text-gray-400">Hesabına bağlı e-posta adresini gir. Sana şifreni sıfırlaman için bir bağlantı göndereceğiz.</p>
+                <div *ngIf="resetMessage" [ngClass]="resetMessage.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-red-500/10 border-red-500/20 text-red-400'" class="p-3 rounded border text-sm flex items-start gap-2">
+                    <lucide-icon [name]="resetMessage.type === 'success' ? 'check-circle' : 'alert-circle'" class="h-5 w-5 shrink-0"></lucide-icon>
+                    <span>{{ resetMessage.text }}</span>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-medium uppercase tracking-wider text-gray-400 ml-1">E-posta Adresi</label>
+                    <div class="relative group">
+                        <lucide-icon name="mail" class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-500 transition-colors group-focus-within:text-primary"></lucide-icon>
+                        <input [formControl]="forgotPasswordControl" type="email" placeholder="lord@sancaklar.com" class="flex h-11 w-full rounded-lg border border-white/10 bg-white/5 px-3 pl-12 text-sm text-white placeholder:text-gray-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/50 transition-all duration-300">
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 pt-2 flex justify-end gap-3 bg-black/20">
+                <button (click)="closeForgotPassword()" class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors">Vazgeç</button>
+                <button (click)="onRefreshPassword()" [disabled]="isResetting || forgotPasswordControl.invalid" class="px-6 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold shadow hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-all">
+                    <lucide-icon *ngIf="isResetting" name="loader-2" class="h-4 w-4 animate-spin"></lucide-icon>
+                    {{ isResetting ? 'Gönderiliyor...' : 'Bağlantı Gönder' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>

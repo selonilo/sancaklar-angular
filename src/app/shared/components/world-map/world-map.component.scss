@@ -1,0 +1,184 @@
+:host {
+    display: block;
+    width: 100%;
+    height: 700px; /* Toplam yükseklik */
+    font-family: 'Cinzel', serif;
+    overflow: hidden;
+    user-select: none;
+
+    /* Konteyner Dışı */
+    background-color: #1a1a1a;
+    border: 2px solid #5c4d3c;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+.game-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* --- ÜST BAR --- */
+.info-bar {
+    height: 50px;
+    flex-shrink: 0;
+    background: #2e241b;
+    border-bottom: 2px solid #1a1510;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px;
+    z-index: 50;
+    color: #e2e8f0;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 10px);
+}
+.title-section { display: flex; align-items: center; gap: 8px; }
+.crown-icon { color: #fbbf24; }
+.info-bar h1 { font-size: 14px; font-weight: 700; color: #f1f5f9; text-transform: uppercase; letter-spacing: 1px; margin:0;}
+.dark-btn {
+    background: #4a3e35; border: 1px solid #5c4d3c; color: #e2e8f0;
+    padding: 4px 10px; cursor: pointer; font-size: 10px; font-weight: 700; border-radius: 4px; text-transform: uppercase;
+}
+.dark-btn:hover { background: #5c4d3c; color: #fff; border-color: #fbbf24; }
+
+/* --- İÇERİK YAPISI (SOL: MAP, SAĞ: PANEL) --- */
+.content-wrapper {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* SOL: Harita Alanı */
+.map-section {
+    flex: 1; /* Kalan tüm alanı kapla */
+    position: relative;
+    border-right: 2px solid #5c4d3c; /* Sağ tarafa sınır çizgisi */
+}
+
+.map-viewport {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: #4b6e32;
+    overflow: hidden;
+    cursor: grab;
+}
+.map-viewport:active { cursor: grabbing; }
+
+/* SAĞ: Yan Panel */
+.side-panel {
+    width: 240px; /* Sabit Genişlik */
+    background: #231e1a; /* Koyu Panel Rengi */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    gap: 16px;
+    border-left: 1px solid #000;
+    box-shadow: inset 5px 0 20px rgba(0,0,0,0.5); /* İç gölge */
+}
+
+/* --- YAN PANEL BİLEŞENLERİ --- */
+
+/* 1. Koordinat Kutusu */
+.coords-box {
+    width: 100%;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #5c4d3c;
+    border-radius: 6px;
+    padding: 10px;
+    text-align: center;
+}
+.coords-title { font-size: 10px; color: #94a3b8; margin-bottom: 4px; letter-spacing: 1px; }
+.coords-values { font-family: 'Inter', monospace; font-size: 16px; font-weight: 700; color: #fbbf24; display: flex; justify-content: center; gap: 12px; }
+
+/* 2. Minimap (Artık Absolute Değil, Panel İçinde) */
+.minimap-container {
+    /* Position relative kalsın ki panel akışına uysun */
+    position: relative;
+    width: 190px; /* Minimap boyutu + padding */
+    height: 190px;
+    background: #1a1510;
+    border: 2px solid #5c4d3c;
+    padding: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    border-radius: 4px;
+}
+.minimap-wrapper {
+    position: relative;
+    background: #3a5a2a;
+    cursor: crosshair; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* 3. Seçim Bilgisi */
+.selection-info {
+    width: 100%;
+    background: rgba(255,255,255,0.03);
+    border: 1px dashed #5c4d3c;
+    padding: 12px;
+    border-radius: 6px;
+    text-align: center;
+}
+.selection-info h4 { margin: 0; color: #fbbf24; font-size: 14px; }
+.selection-info.empty { opacity: 0.5; }
+
+/* --- HARİTA ELEMENTLERİ (Önceki kodlardan) --- */
+.map-layer { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; z-index: 1; backface-visibility: hidden; }
+
+/* ZEMİN (Viewport Background) */
+.grid-background {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+    background-color: #567d46;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.07) 0%, transparent 50%),
+        radial-gradient(circle at 0% 0%, rgba(0,0,0,0.1) 0%, transparent 40%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cg fill='%233a5a2a' fill-opacity='0.4'%3E%3Ccircle cx='40' cy='40' r='6'/%3E%3Ccircle cx='35' cy='45' r='5'/%3E%3Ccircle cx='45' cy='45' r='5'/%3E%3Cpath d='M150 150 L160 140 L170 150 Z' fill='%233e4e30'/%3E%3Cpath d='M120 80 L125 75 L130 80 Z' fill='%233e4e30'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:
+        calc(50px * var(--map-scale)) calc(50px * var(--map-scale)),
+        calc(400px * var(--map-scale)) calc(400px * var(--map-scale)),
+        calc(400px * var(--map-scale)) calc(400px * var(--map-scale)),
+        calc(200px * var(--map-scale)) calc(200px * var(--map-scale));
+    background-position:
+        var(--map-x) var(--map-y),
+        var(--map-x) var(--map-y),
+        calc(var(--map-x) + 200px * var(--map-scale)) calc(var(--map-y) + 200px * var(--map-scale)),
+        var(--map-x) var(--map-y);
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.3);
+}
+
+/* KÖYLER */
+.village-tile { position: absolute; display: flex; align-items: center; justify-content: center; z-index: 10; will-change: transform; }
+.village-tile:hover, .village-tile.selected { z-index: 100; cursor: pointer; }
+.village-icon { width: 85%; height: 85%; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.6)); }
+.village-tile:hover .village-icon { transform: scale(1.2) translateY(-8px); filter: drop-shadow(4px 12px 12px rgba(0,0,0,0.5)) brightness(1.1); }
+.village-tile.selected .village-icon { filter: drop-shadow(0 0 8px #fbbf24) brightness(1.1); }
+.village-label {
+    position: absolute; bottom: -24px; background: rgba(26, 20, 15, 0.95); border: 1px solid #fbbf24;
+    color: #fbbf24; padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; white-space: nowrap; pointer-events: none;
+    opacity: 0; transform: translateY(5px); transition: all 0.2s; z-index: 200; box-shadow: 0 2px 5px rgba(0,0,0,0.5); font-family: 'Cinzel', serif;
+}
+.village-tile:hover .village-label { opacity: 1; transform: translateY(0); }
+
+/* POPUP */
+.map-popup {
+    position: absolute; width: 240px; background: #23201d; border: 1px solid #5c4d3c;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 600; font-size: 12px; color: #e2e8f0; border-radius: 6px; animation: popupFade In 0.2s ease-out;
+}
+@keyframes popupFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.popup-header { background: #2e241b; color: #fbbf24; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; border-bottom: 1px solid #4a3e35; }
+.close-btn { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; } .close-btn:hover { color: #ef4444; }
+.popup-content { padding: 12px; }
+.coord-tag { background: rgba(255,255,255,0.05); color: #94a3b8; display: inline-block; padding: 2px 6px; border-radius: 3px; font-weight: bold; font-family: monospace; font-size: 11px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.1); }
+.info-row { margin-bottom: 6px; display: flex; justify-content: space-between; border-bottom: 1px dashed #4a3e35; padding-bottom: 4px; }
+.info-row span { color: #94a3b8; } .info-row strong { color: #f1f5f9; }
+.text-player { color: #fbbf24 !important; } .text-ally { color: #38bdf8 !important; }
+.popup-actions { margin-top: 12px; display: flex; gap: 6px; }
+.btn-action { flex: 1; border: none; padding: 6px; font-weight: 700; cursor: pointer; border-radius: 3px; font-size: 10px; text-transform: uppercase; font-family: 'Cinzel', serif; }
+.btn-attack { background: #7f1d1d; color: #fecaca; border: 1px solid #991b1b; }
+.btn-support { background: #0c4a6e; color: #bae6fd; border: 1px solid #075985; }
+
+/* MINIMAP ELEMENTS */
+.mini-dot { position: absolute; width: 3px; height: 3px; transform: translate(-50%, -50%); box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+.viewport-indicator { position: absolute; border: 1px solid #fff; background: rgba(255, 255, 255, 0.1); box-shadow: 0 0 0 9999px rgba(0,0,0,0.4); pointer-events: none; }

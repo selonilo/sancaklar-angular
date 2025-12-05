@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="utf-8">
+    <title>Sancaklar</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="assets/images/logo/sancaklar_logo.png">
+</head>
+<body class="bg-background text-foreground antialiased">
+
+<app-root>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; background-color: #0f0f13; }
+        .app-loading {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;
+        }
+        .app-loading img {
+            width: 120px; height: 120px; object-fit: contain;
+            animation: breath 2s infinite ease-in-out;
+        }
+        @keyframes breath {
+            0% { opacity: 0.6; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 0.6; transform: scale(0.95); }
+        }
+    </style>
+
+    <div class="app-loading">
+        <img src="assets/images/logo/sancaklar_logo.png" alt="Sancaklar">
+    </div>
+</app-root>
+
+</body>
+</html>

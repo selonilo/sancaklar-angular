@@ -1,0 +1,39 @@
+<div *ngIf="isLoading$ | async"
+     class="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#0f0f13]/95 backdrop-blur-xl animate-in fade-in duration-300">
+
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <h3 class="text-4xl font-cinzel font-bold text-[#fbbf24] tracking-[0.4em] drop-shadow-[0_4px_10px_rgba(0,0,0,0.8)] mb-16 animate-pulse relative z-20">
+        SANCAKLAR
+    </h3>
+
+    <div class="relative grid place-items-center w-96 h-96 z-10">
+
+        <div class="col-start-1 row-start-1 w-80 h-80 border-[1px] border-dashed border-[#5c4d3c]/40 rounded-full animate-[spin_20s_linear_infinite]"></div>
+
+        <div class="col-start-1 row-start-1 w-64 h-64 border-[1px] border-dotted border-primary/30 rounded-full animate-[spin_15s_linear_infinite_reverse]"></div>
+
+        <div class="col-start-1 row-start-1 w-56 h-56 border-t-2 border-primary/60 rounded-full animate-spin"></div>
+
+        <div class="col-start-1 row-start-1 w-48 h-48 rounded-full overflow-hidden ring-1 ring-[#fbbf24]/50 shadow-[0_0_80px_rgba(251,191,36,0.2)] bg-[#15100d] flex items-center justify-center">
+
+            <img src="assets/images/logo/sancaklar_logo.png"
+                 alt="Sancaklar Loading"
+                 class="w-full h-full object-contain p-3 drop-shadow-2xl opacity-100">
+        </div>
+    </div>
+
+    <div class="mt-8 flex items-center justify-center gap-3 text-xs font-bold text-[#8d7863] font-mono tracking-widest uppercase bg-black/40 px-6 py-2 rounded-full border border-[#5c4d3c]/50 shadow-lg relative z-20">
+        <lucide-icon name="hourglass" class="h-4 w-4 animate-spin text-primary"></lucide-icon>
+        <span>Veriler İşleniyor</span>
+        <span class="flex gap-0.5 ml-1">
+            <span class="animate-[bounce_1s_infinite]">.</span>
+            <span class="animate-[bounce_1s_infinite_0.2s]">.</span>
+            <span class="animate-[bounce_1s_infinite_0.4s]">.</span>
+        </span>
+    </div>
+
+</div>
+<router-outlet></router-outlet>
