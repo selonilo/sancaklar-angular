@@ -308,4 +308,81 @@ export class GameComponent implements OnInit, OnDestroy {
             this.village.resources.meatAmount >= cost.meat &&
             this.village.resources.ironAmount >= cost.iron;
     }
+
+    buildingPositions: { [key: string]: { left: number; top: number; width: number; height: number } } = {
+        // --- KÖŞELER (ÜRETİM TESİSLERİ) ---
+
+        // 1. Sol Üst: Demir Madeni
+        'ironMine':     { left: 8, top: 12, width: 12, height: 12 },
+
+        // 2. Sağ Üst: Çiftlik
+        'farm':         { left: 90, top: 15, width: 14, height: 14 },
+
+        // 3. Sol Alt: Et Tesisi (Eski Kil Ocağı yeri)
+        'meatPlant':    { left: 6, top: 82, width: 12, height: 12 },
+
+        // 4. Sağ Alt: Odun Kampı
+        'timberCamp':   { left: 90, top: 85, width: 12, height: 12 },
+
+
+        // --- MERKEZ BİNALAR (İÇERİSİ) ---
+
+        // 5. Tam Orta: Karargah (Kale)
+        'headquarters': { left: 62, top: 25, width: 12, height: 12 },
+
+        // 6. Sol Taraf: Depo (Uzun bina)
+        'warehouse':    { left: 28, top: 42, width: 12, height: 10 },
+
+        // 7. Orta Sol: Pazar (Çadırlı alan)
+        'market':       { left: 45, top: 37, width: 8, height: 8 },
+
+        // 8. Sol Alt İç: Demirci
+        'smithy':       { left: 38, top: 73, width: 10, height: 10 },
+
+        // 9. Sağ Alt İç: Kışla
+        'barracks':     { left: 75, top: 57, width: 12, height: 12 },
+
+        'wall':     { left: 75, top: 90, width: 12, height: 12 },
+
+        // NOT: 'stable' (Ahır), 'workshop' (Atölye) ve 'academy' (Akademi) için
+        // haritada boş bir yer belirleyip buraya ekleyebilirsin.
+        // Şimdilik kalabalık olmasın diye eklemedim.
+    };
+
+    getBuildingStyle(type: string) {
+        const pos = this.buildingPositions[type];
+        if (!pos) return { display: 'none' };
+
+        return {
+            'left.%': pos.left,
+            'top.%': pos.top,
+            'width.%': pos.width,
+            'height.%': pos.height
+        };
+    }
+
+    getBuildingsByCategory(category: string): string[] {
+        return Object.keys(this.buildingsConfig).filter(key => this.buildingsConfig[key].category === category);
+    }
+
+    troopConfig: any = {
+        spearmen: { name: 'Mızrakçı', icon: 'sword' },
+        swordsmen: { name: 'Kılıç Ustası', icon: 'sword' },
+        axemen: { name: 'Baltacı', icon: 'axe' },
+        archers: { name: 'Okçu', icon: 'crosshair' },
+        scouts: { name: 'Casus', icon: 'eye' },
+        lightCavalry: { name: 'Hafif Atlı', icon: 'feather' },
+        heavyCavalry: { name: 'Ağır Atlı', icon: 'shield' },
+        rams: { name: 'Şahmerdan', icon: 'hammer' },
+        catapults: { name: 'Mancınık', icon: 'target' },
+        conquerors: { name: 'Misyoner', icon: 'crown' }
+    };
+
+// Askerleri belirli bir sırada göstermek için liste
+    troopKeys = Object.keys(this.troopConfig);
+
+    getTroopCount(key: string): number {
+        // Burada 'as any' diyerek TypeScript'e "Sen karışma, ben ne yaptığımı biliyorum" diyoruz.
+        return (this.village?.troops as any)[key] || 0;
+    }
 }

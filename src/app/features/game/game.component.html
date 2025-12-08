@@ -15,205 +15,286 @@
 
     <div *ngIf="village && !isLoading">
 
-        <header class="border-b border-border/40 bg-card/80 backdrop-blur-sm sticky top-0 z-20">
-            <div class="container mx-auto px-4 py-3">
+        <header class="border-b border-border/40 bg-card/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+            <div class="container mx-auto px-4 py-2">
 
-                <div class="flex items-center justify-between mb-4">
-                    <div class="flex items-center gap-4">
-                        <div class="flex items-center gap-3">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-3">
 
-                            <!-- LOGO (MADALYON STİLİ) -->
+                    <div class="flex items-center gap-3 self-start md:self-auto">
+                        <div
+                            class="h-10 w-10 flex-shrink-0 rounded-full bg-[#15100d] border border-[#5c4d3c] ring-1 ring-[#fbbf24]/40 shadow-[0_0_15px_rgba(251,191,36,0.25)] flex items-center justify-center relative overflow-hidden group">
                             <div
-                                class="h-12 w-12 flex-shrink-0 rounded-full bg-[#15100d] border border-[#5c4d3c] ring-1 ring-[#fbbf24]/40 shadow-[0_0_15px_rgba(251,191,36,0.25)] flex items-center justify-center relative overflow-hidden group">
-                                <!-- İç parlama efekti -->
-                                <div
-                                    class="absolute inset-0 bg-[#fbbf24]/10 rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-300"></div>
-
-                                <img src="assets/images/logo/sancaklar_logo.png"
-                                     alt="Sancaklar"
-                                     class="relative z-10 w-full h-full object-contain p-2 drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
-                            </div>
-
-                            <!-- YAZI ALANI -->
-                            <div class="flex flex-col">
-                                <h1 class="text-xl font-bold font-cinzel text-foreground tracking-wide leading-none mb-1 shadow-black drop-shadow-sm">
-                                    {{ village.name }}
-                                </h1>
-
-                                <p class="text-xs text-muted-foreground font-mono flex items-center gap-1">
-                                    <lucide-icon name="map-pin" class="h-3 w-3 text-[#5c4d3c]"></lucide-icon>
-                                    <span>Koordinat:</span>
-                                    <span class="text-[#fbbf24] font-semibold">({{ village.xcoord }}|{{ village.ycoord }})</span>
-                                </p>
-                            </div>
+                                class="absolute inset-0 bg-[#fbbf24]/10 rounded-full opacity-50 group-hover:opacity-80 transition-opacity duration-300"></div>
+                            <img src="assets/images/logo/sancaklar_logo.png" alt="Sancaklar"
+                                 class="relative z-10 w-full h-full object-contain p-1.5 drop-shadow-sm group-hover:scale-110 transition-transform duration-300">
                         </div>
-
-                        <!-- PUAN ROZETİ -->
-                        <span
-                            class="inline-flex items-center gap-1.5 rounded-full border border-[#5c4d3c]/50 bg-[#1a1a1e] px-3 py-1 text-xs font-bold text-foreground shadow-sm transition-colors hover:border-[#fbbf24]/50">
-                            <lucide-icon name="star" class="h-3 w-3 text-[#fbbf24] fill-[#fbbf24]"></lucide-icon>
-                            {{ village.points | number }} Puan
-                        </span>
+                        <div class="flex flex-col">
+                            <h1 class="text-lg font-bold font-cinzel text-foreground tracking-wide leading-none mb-0.5 shadow-black drop-shadow-sm">
+                                {{ village.name }}
+                            </h1>
+                            <p class="text-[10px] text-muted-foreground font-mono flex items-center gap-1">
+                                <lucide-icon name="map-pin" class="h-3 w-3 text-[#5c4d3c]"></lucide-icon>
+                                <span class="text-[#fbbf24]">({{ village.xcoord }}|{{ village.ycoord }})</span>
+                            </p>
+                        </div>
                     </div>
 
-                    <button (click)="handleLogout()"
-                            class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-destructive/10 hover:text-destructive h-9 px-4 py-2 border border-input bg-transparent shadow-sm">
-                        <lucide-icon name="log-out" class="h-4 w-4 mr-2"></lucide-icon>
-                        Çıkış
-                    </button>
+                    <nav
+                        class="flex items-center gap-1 bg-muted/30 p-1 rounded-lg border border-border/50 overflow-x-auto max-w-full no-scrollbar">
+                        <button *ngFor="let tab of ['overview', 'buildings', 'research', 'army', 'map']"
+                                (click)="activeTab = tab"
+                                [class.bg-background]="activeTab === tab"
+                                [class.text-primary]="activeTab === tab"
+                                [class.shadow-sm]="activeTab === tab"
+                                [class.ring-1]="activeTab === tab"
+                                [class.ring-border]="activeTab === tab"
+                                class="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground transition-all hover:text-foreground focus:outline-none whitespace-nowrap">
+
+                            <lucide-icon *ngIf="tab === 'overview'" name="home" class="h-4 w-4"></lucide-icon>
+                            <lucide-icon *ngIf="tab === 'buildings'" name="hammer" class="h-4 w-4"></lucide-icon>
+                            <lucide-icon *ngIf="tab === 'research'" name="flask-conical" class="h-4 w-4"></lucide-icon>
+                            <lucide-icon *ngIf="tab === 'army'" name="sword" class="h-4 w-4"></lucide-icon>
+                            <lucide-icon *ngIf="tab === 'map'" name="map" class="h-4 w-4"></lucide-icon>
+
+                            <span class="hidden sm:inline capitalize">
+                                {{ tab === 'overview' ? 'Genel' : tab === 'buildings' ? 'Binalar' : tab === 'research' ? 'Ar-Ge' : tab === 'army' ? 'Ordu' : 'Harita' }}
+                            </span>
+                        </button>
+                    </nav>
+
+                    <div class="flex items-center gap-3 self-end md:self-auto">
+                        <span
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#5c4d3c]/50 bg-[#1a1a1e] px-3 py-1 text-xs font-bold text-foreground shadow-sm">
+                            <lucide-icon name="star" class="h-3 w-3 text-[#fbbf24] fill-[#fbbf24]"></lucide-icon>
+                            {{ village.points | number }}
+                        </span>
+
+                        <button (click)="handleLogout()"
+                                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-destructive/10 hover:text-destructive h-8 px-3 border border-input bg-transparent shadow-sm"
+                                title="Çıkış Yap">
+                            <lucide-icon name="log-out" class="h-4 w-4"></lucide-icon>
+                        </button>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-4 gap-4 p-2 bg-muted/30 rounded-lg border border-border/50">
+                <div
+                    class="grid grid-cols-2 md:grid-cols-4 gap-3 p-2 bg-muted/20 backdrop-blur-sm rounded-xl border border-border/40">
 
-                    <div class="flex flex-col items-center justify-center">
-                        <div class="flex items-center gap-1.5 mb-1">
-                            <lucide-icon name="tree-deciduous" class="h-3.5 w-3.5 text-amber-600"></lucide-icon>
-                            <span class="text-xs text-muted-foreground font-medium">Odun</span>
+                    <div
+                        class="flex items-center gap-3 p-2 rounded-lg bg-card border border-border/50 shadow-sm group hover:border-amber-500/30 transition-colors">
+                        <div
+                            class="h-8 w-8 flex items-center justify-center rounded-full bg-amber-500/10 text-amber-600 group-hover:bg-amber-500/20 transition-colors">
+                            <lucide-icon name="tree-deciduous" class="h-4 w-4"></lucide-icon>
                         </div>
-                        <div class="font-bold text-amber-700 leading-none text-lg">
-                            {{ village.resources.woodAmount | number:'1.0-0' }}
-                        </div>
-                        <div class="text-[10px] font-medium text-emerald-600 mt-0.5">
-                            +{{ village.resources.woodHourlyProduction | number }}/sa
+                        <div class="flex flex-col min-w-0">
+                            <span
+                                class="text-[10px] text-muted-foreground font-medium uppercase tracking-wider leading-none mb-1">Odun</span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span
+                                    class="font-bold text-foreground text-sm leading-none">{{ village.resources.woodAmount | number:'1.0-0' }}</span>
+                                <span
+                                    class="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-1 rounded leading-none py-0.5">
+                    +{{ village.resources.woodHourlyProduction | number }}
+                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="flex flex-col items-center justify-center">
-                        <div class="flex items-center gap-1.5 mb-1">
-                            <lucide-icon name="beef" class="h-3.5 w-3.5 text-red-600"></lucide-icon>
-                            <span class="text-xs text-muted-foreground font-medium">Et</span>
+                    <div
+                        class="flex items-center gap-3 p-2 rounded-lg bg-card border border-border/50 shadow-sm group hover:border-red-500/30 transition-colors">
+                        <div
+                            class="h-8 w-8 flex items-center justify-center rounded-full bg-red-500/10 text-red-600 group-hover:bg-red-500/20 transition-colors">
+                            <lucide-icon name="beef" class="h-4 w-4"></lucide-icon>
                         </div>
-                        <div class="font-bold text-red-700 leading-none text-lg">
-                            {{ village.resources.meatAmount | number:'1.0-0' }}
-                        </div>
-                        <div class="text-[10px] font-medium text-emerald-600 mt-0.5">
-                            +{{ village.resources.meatHourlyProduction | number }}/sa
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col items-center justify-center">
-                        <div class="flex items-center gap-1.5 mb-1">
-                            <lucide-icon name="pickaxe" class="h-3.5 w-3.5 text-slate-500"></lucide-icon>
-                            <span class="text-xs text-muted-foreground font-medium">Demir</span>
-                        </div>
-                        <div class="font-bold text-slate-600 leading-none text-lg">
-                            {{ village.resources.ironAmount | number:'1.0-0' }}
-                        </div>
-                        <div class="text-[10px] font-medium text-emerald-600 mt-0.5">
-                            +{{ village.resources.ironHourlyProduction | number }}/sa
+                        <div class="flex flex-col min-w-0">
+                            <span
+                                class="text-[10px] text-muted-foreground font-medium uppercase tracking-wider leading-none mb-1">Et</span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span
+                                    class="font-bold text-foreground text-sm leading-none">{{ village.resources.meatAmount | number:'1.0-0' }}</span>
+                                <span
+                                    class="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-1 rounded leading-none py-0.5">
+                    +{{ village.resources.meatHourlyProduction | number }}
+                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="flex flex-col items-center justify-center">
-                        <div class="flex items-center gap-1.5 mb-1">
-                            <lucide-icon name="warehouse" class="h-3.5 w-3.5 text-foreground"></lucide-icon>
-                            <span class="text-xs text-muted-foreground font-medium">Depo</span>
+                    <div
+                        class="flex items-center gap-3 p-2 rounded-lg bg-card border border-border/50 shadow-sm group hover:border-slate-500/30 transition-colors">
+                        <div
+                            class="h-8 w-8 flex items-center justify-center rounded-full bg-slate-500/10 text-slate-600 group-hover:bg-slate-500/20 transition-colors">
+                            <lucide-icon name="pickaxe" class="h-4 w-4"></lucide-icon>
                         </div>
-                        <div class="font-bold text-foreground leading-none text-lg">
-                            {{ village.resources.storageCapacity | number }}
+                        <div class="flex flex-col min-w-0">
+                            <span
+                                class="text-[10px] text-muted-foreground font-medium uppercase tracking-wider leading-none mb-1">Demir</span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span
+                                    class="font-bold text-foreground text-sm leading-none">{{ village.resources.ironAmount | number:'1.0-0' }}</span>
+                                <span
+                                    class="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-1 rounded leading-none py-0.5">
+                    +{{ village.resources.ironHourlyProduction | number }}
+                </span>
+                            </div>
                         </div>
-                        <div class="text-[10px] text-transparent mt-0.5">.</div>
                     </div>
+
+                    <div
+                        class="flex items-center gap-3 p-2 rounded-lg bg-card border border-border/50 shadow-sm group hover:border-primary/30 transition-colors">
+                        <div
+                            class="h-8 w-8 flex items-center justify-center rounded-full bg-primary/10 text-primary group-hover:bg-primary/20 transition-colors">
+                            <lucide-icon name="warehouse" class="h-4 w-4"></lucide-icon>
+                        </div>
+                        <div class="flex flex-col min-w-0">
+                            <span
+                                class="text-[10px] text-muted-foreground font-medium uppercase tracking-wider leading-none mb-1">Depo</span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span
+                                    class="font-bold text-foreground text-sm leading-none">{{ village.resources.storageCapacity | number }}</span>
+                                <span class="text-[10px] text-muted-foreground opacity-50">Kap.</span>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </header>
 
+
         <main class="container mx-auto px-4 py-6">
-
-            <div class="w-full max-w-2xl mx-auto mb-8">
-                <div class="grid grid-cols-5 p-1 bg-muted/50 rounded-lg">
-                    <button
-                        *ngFor="let tab of ['overview', 'buildings', 'research', 'army', 'map']"
-                        (click)="activeTab = tab"
-                        [class.bg-background]="activeTab === tab"
-                        [class.text-foreground]="activeTab === tab"
-                        [class.shadow-sm]="activeTab === tab"
-                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 text-muted-foreground gap-2">
-
-                        <lucide-icon *ngIf="tab === 'overview'" name="home" class="h-4 w-4"></lucide-icon>
-                        <lucide-icon *ngIf="tab === 'buildings'" name="hammer" class="h-4 w-4"></lucide-icon>
-                        <lucide-icon *ngIf="tab === 'research'" name="flask-conical" class="h-4 w-4"></lucide-icon>
-                        <lucide-icon *ngIf="tab === 'army'" name="sword" class="h-4 w-4"></lucide-icon>
-                        <lucide-icon *ngIf="tab === 'map'" name="map" class="h-4 w-4"></lucide-icon>
-                        <span
-                            class="hidden sm:inline capitalize">{{ tab === 'overview' ? 'Genel' : tab === 'buildings' ? 'Binalar' : tab === 'research' ? 'Ar-Ge' : tab === 'army' ? 'Ordu' : 'Harita' }}</span>
-                    </button>
-                </div>
-            </div>
 
             <div [ngSwitch]="activeTab">
 
-                <div *ngSwitchCase="'overview'" class="space-y-6 animate-in fade-in duration-300">
+                <div *ngSwitchCase="'overview'" class="animate-in fade-in duration-300">
 
-                    <div class="rounded-xl border border-border bg-card text-card-foreground shadow-sm">
-                        <div class="flex flex-col space-y-1.5 p-6 border-b border-border/40">
-                            <h3 class="font-semibold leading-none tracking-tight flex items-center gap-2">
-                                <lucide-icon name="map" class="h-5 w-5 text-primary"></lucide-icon>
-                                Köye Genel Bakış
-                            </h3>
+                    <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+
+                        <div class="xl:col-span-3 space-y-6 order-2 xl:order-1">
+
+                            <app-construction-queue
+                                [constructions]="constructions"
+                                (onQueueUpdated)="loadVillageData()">
+                            </app-construction-queue>
+
+                            <div *ngIf="constructions.length === 0"
+                                 class="hidden xl:block p-6 rounded-xl border border-dashed border-border/40 bg-muted/10 text-center">
+                                <lucide-icon name="hammer"
+                                             class="h-8 w-8 mx-auto text-muted-foreground/30 mb-2"></lucide-icon>
+                                <p class="text-sm text-muted-foreground/60">İnşaat kuyruğu boş.</p>
+                            </div>
+
                         </div>
 
-                        <div class="p-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                            <button *ngFor="let type of allBuildingsList"
-                                    (click)="handleBuildingClick(type)"
-                                    class="group flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-border/50 bg-secondary/20 hover:bg-primary/10 hover:border-primary/50 transition-all cursor-pointer relative overflow-hidden">
+                        <div class="xl:col-span-6 order-1 xl:order-2">
+                            <div
+                                class="relative w-full select-none rounded-xl overflow-hidden shadow-2xl border-4 border-[#2e2016] bg-[#1a120b]">
 
-                                <div
-                                    class="absolute inset-0 bg-gradient-to-tr from-primary/0 via-primary/0 to-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-                                <div
-                                    class="p-2.5 bg-background rounded-full shadow-sm ring-1 ring-border group-hover:ring-primary/50 transition-all">
-                                    <lucide-icon [name]="getIconForBuilding(type)"
-                                                 class="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors">
-                                    </lucide-icon>
+                                <div class="relative aspect-[1.45/1] w-full">
+                                    <img src="assets/images/overview.png"
+                                         alt="Köy Genel Bakış"
+                                         class="w-full h-full object-cover">
                                 </div>
 
-                                <div class="text-center z-10">
-                                    <span
-                                        class="block text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
-                                        {{ buildingsConfig[type]?.name }}
-                                    </span>
-                                    <span
-                                        class="block text-[10px] text-muted-foreground bg-background/50 px-1.5 rounded-full mt-1">
-                                        Seviye {{ getBuildingLevel(type) }}
-                                    </span>
-                                </div>
-                            </button>
+                                <ng-container *ngFor="let type of allBuildingsList">
+                                    <div *ngIf="buildingPositions[type]"
+                                         (click)="handleBuildingClick(type)"
+                                         [ngStyle]="getBuildingStyle(type)"
+                                         class="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group z-10">
+
+                                        <div
+                                            class="absolute inset-0 bg-white/0 group-hover:bg-white/20 rounded-full blur-md transition-all duration-200"></div>
+
+                                        <div
+                                            class="absolute -top-6 left-1/2 -translate-x-1/2 min-w-[30px] flex flex-col items-center">
+                                            <div
+                                                class="level-badge px-2 py-0.5 rounded-sm min-w-[24px] text-[10px] border border-[#6b8c28]">
+                                                <span>{{ getBuildingLevel(type) }}</span>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="absolute top-full left-1/2 -translate-x-1/2 mt-1 opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none">
+                                            <div
+                                                class="bg-black/90 text-[#fbbf24] text-xs px-2 py-1 rounded border border-[#fbbf24]/30 whitespace-nowrap shadow-xl font-serif tracking-wide">
+                                                {{ buildingsConfig[type]?.name }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="xl:col-span-3 space-y-6 order-3 xl:order-3">
 
-                        <app-construction-queue [constructions]="constructions"
-                                                (onQueueUpdated)="loadVillageData()"></app-construction-queue>
-
-                        <div class="rounded-xl border border-border bg-card text-card-foreground shadow-sm">
-                            <div class="flex flex-col space-y-1.5 p-6">
-                                <h3 class="font-semibold leading-none tracking-tight flex items-center gap-2">
-                                    <lucide-icon name="castle" class="h-5 w-5"></lucide-icon>
-                                    Köy Bilgileri
-                                </h3>
-                            </div>
-                            <div class="p-6 pt-0 space-y-3">
-                                <div class="flex justify-between py-2 border-b border-border/50">
-                                    <span class="text-muted-foreground">Puan</span>
-                                    <span class="font-bold">{{ village.points }}</span>
+                            <div
+                                class="rounded-xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden">
+                                <div class="bg-muted/30 p-3 border-b border-border/50 flex items-center gap-2">
+                                    <lucide-icon name="crown" class="h-4 w-4 text-amber-600"></lucide-icon>
+                                    <h3 class="font-bold text-sm font-cinzel">Mülk Bilgileri</h3>
                                 </div>
-                                <div class="flex justify-between py-2 border-b border-border/50">
-                                    <span class="text-muted-foreground">Sadakat</span>
-                                    <span class="font-bold">{{ village.loyalty }}</span>
-                                </div>
-                                <div class="flex justify-between py-2">
-                                    <span class="text-muted-foreground">Lord</span>
-                                    <span class="font-bold">{{ village.playerName }}</span>
+                                <div class="p-4 space-y-3 text-sm">
+                                    <div class="flex justify-between items-center pb-2 border-b border-border/40">
+                                        <span class="text-muted-foreground">Puan</span>
+                                        <span class="font-bold font-mono">{{ village.points | number }}</span>
+                                    </div>
+                                    <div class="flex justify-between items-center pb-2 border-b border-border/40">
+                                        <span class="text-muted-foreground">Sadakat</span>
+                                        <span class="font-bold text-red-600">{{ village.loyalty }}%</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Hükümdar</span>
+                                        <span class="font-bold text-amber-600">{{ village.playerName }}</span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div
+                                class="rounded-xl border border-border bg-card text-card-foreground shadow-sm overflow-hidden">
+                                <div class="bg-muted/30 p-3 border-b border-border/50 flex items-center gap-2">
+                                    <lucide-icon name="shield" class="h-4 w-4 text-blue-600"></lucide-icon>
+                                    <h3 class="font-bold text-sm font-cinzel">Köydeki Birlikler</h3>
+                                </div>
+
+                                <div class="p-3">
+                                    <div class="grid grid-cols-2 gap-2">
+                                        <div *ngFor="let key of troopKeys"
+                                             class="flex items-center gap-2 p-2 rounded border border-border/30 transition-all"
+                                             [class.opacity-50]="getTroopCount(key) === 0"
+                                             [class.bg-muted-30]="getTroopCount(key) === 0"
+                                             [class.bg-card]="getTroopCount(key) > 0"
+                                             [class.border-primary-20]="getTroopCount(key) > 0">
+
+                                            <div
+                                                class="h-6 w-6 flex items-center justify-center bg-background rounded-sm border border-border shadow-sm">
+                                                <lucide-icon [name]="troopConfig[key]?.icon || 'sword'"
+                                                             class="h-3 w-3 text-foreground"></lucide-icon>
+                                            </div>
+
+                                            <div class="flex flex-col min-w-0">
+        <span class="text-[9px] text-muted-foreground truncate leading-none mb-0.5">
+            {{ troopConfig[key]?.name }}
+        </span>
+                                                <span class="text-xs font-bold font-mono leading-none">
+            {{ getTroopCount(key) | number }}
+        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button (click)="activeTab = 'army'"
+                                            class="w-full mt-3 text-xs text-primary hover:text-primary/80 hover:underline flex items-center justify-center gap-1 py-1">
+                                        Asker Eğit
+                                        <lucide-icon name="arrow-right" class="h-3 w-3"></lucide-icon>
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
 
                 <div *ngSwitchCase="'buildings'" class="space-y-8 animate-in fade-in duration-300">
-
                     <app-construction-queue
                         *ngIf="constructions.length > 0"
                         [constructions]="constructions"
@@ -221,153 +302,41 @@
                         class="mb-6 block">
                     </app-construction-queue>
 
-                    <div>
-                        <h3 class="text-xl font-bold mb-4 font-cinzel text-primary">Altyapı</h3>
+                    <div *ngFor="let cat of ['infrastructure', 'resource', 'military']">
+                        <h3 class="text-xl font-bold mb-4 font-cinzel text-primary capitalize border-b border-border/30 pb-2">
+                            {{ cat === 'infrastructure' ? 'Altyapı' : cat === 'resource' ? 'Kaynaklar' : 'Askeriye' }}
+                        </h3>
                         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <app-building-card
-                                *ngFor="let type of infrastructureBuildings"
-                                [type]="type"
-                                [currentLevel]="getBuildingLevel(type)"
-                                [village]="village"
-                                (upgrade)="handleBuildingUpgrade($event)">
-                            </app-building-card>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xl font-bold mb-4 font-cinzel text-primary">Kaynak Binaları</h3>
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <app-building-card
-                                *ngFor="let type of resourceBuildings"
-                                [type]="type"
-                                [currentLevel]="getBuildingLevel(type)"
-                                [village]="village"
-                                (upgrade)="handleBuildingUpgrade($event)">
-                            </app-building-card>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="text-xl font-bold mb-4 font-cinzel text-primary">Askeri Binalar</h3>
-                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <app-building-card
-                                *ngFor="let type of militaryBuildings"
-                                [type]="type"
-                                [currentLevel]="getBuildingLevel(type)"
-                                [village]="village"
-                                (upgrade)="handleBuildingUpgrade($event)">
-                            </app-building-card>
+                            <ng-container *ngFor="let key of getBuildingsByCategory(cat)">
+                                <app-building-card
+                                    [type]="key"
+                                    [currentLevel]="getBuildingLevel(key)"
+                                    [village]="village"
+                                    (upgrade)="handleBuildingUpgrade($event)">
+                                </app-building-card>
+                            </ng-container>
                         </div>
                     </div>
                 </div>
 
                 <div *ngSwitchCase="'research'" class="animate-in fade-in duration-300 space-y-6">
-
-                    <div *ngIf="!hasSmithy" class="flex flex-col items-center justify-center p-12 bg-card border border-border rounded-xl border-dashed">
-                        <div class="h-20 w-20 bg-muted/50 rounded-full flex items-center justify-center mb-6 ring-4 ring-muted">
-                            <lucide-icon name="lock" class="h-10 w-10 text-muted-foreground"></lucide-icon>
-                        </div>
-                        <h3 class="text-2xl font-bold font-cinzel text-foreground mb-2">Araştırma Merkezi Kilitli</h3>
-                        <p class="text-muted-foreground text-center max-w-md mb-6">
-                            Birlikleri araştırmak ve ordunu geliştirmek için köyüne bir <span class="font-bold text-primary">Demirci (Smithy)</span> inşa etmelisin.
-                        </p>
-                        <button (click)="activeTab = 'buildings'"
-                                class="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-md font-medium transition-colors flex items-center gap-2">
-                            <lucide-icon name="hammer" class="h-4 w-4"></lucide-icon>
-                            Binalara Git
-                        </button>
+                    <div *ngIf="getBuildingLevel('smithy') === 0"
+                         class="p-12 text-center border border-dashed border-border rounded-xl">
+                        <lucide-icon name="lock" class="h-12 w-12 mx-auto text-muted-foreground mb-4"></lucide-icon>
+                        <h3 class="text-xl font-bold">Araştırma Merkezi Kilitli</h3>
+                        <p class="text-muted-foreground">Önce Demirci (Smithy) inşa etmelisin.</p>
                     </div>
 
-                    <div *ngIf="hasSmithy">
-
-                        <div *ngIf="researches.length > 0" class="mb-8 p-4 bg-primary/5 border border-primary/20 rounded-xl">
-                            <h4 class="text-sm font-bold text-primary flex items-center gap-2 mb-3">
-                                <lucide-icon name="flask-conical" class="h-4 w-4"></lucide-icon>
-                                Süren Araştırmalar
-                            </h4>
-                            <div class="space-y-2">
-                                <div *ngFor="let research of researches" class="flex items-center justify-between bg-background p-3 rounded border border-border">
-                                    <div class="flex items-center gap-3">
-                                        <lucide-icon name="loader-2" class="h-4 w-4 animate-spin text-primary"></lucide-icon>
-                                        <span class="font-semibold">{{ unitConfig[research.unitType]?.name || research.unitType }}</span>
-                                    </div>
-                                    <span class="font-mono text-sm text-muted-foreground">{{ research.remainingSeconds | date:'mm:ss' }} kaldı</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                            <div *ngFor="let unit of researchableUnits"
-                                 class="group relative bg-card border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 shadow-sm">
-
-                                <div class="h-24 bg-gradient-to-b from-muted/50 to-card p-4 flex items-center gap-4 border-b border-border/50">
-                                    <div class="h-16 w-16 bg-background rounded-lg border border-border shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform">
-                                        <lucide-icon name="sword" class="h-8 w-8 text-foreground"></lucide-icon>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-cinzel font-bold text-lg leading-tight">{{ unit.config.name }}</h4>
-                                        <div class="flex items-center gap-2 mt-1">
-                            <span class="text-xs px-2 py-0.5 rounded-full bg-muted text-muted-foreground border border-border/50">
-                                Seviye: <span class="text-primary font-bold">{{ getTechLevel(unit.type) }}</span>
-                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="p-4 space-y-4">
-                                    <p class="text-xs text-muted-foreground line-clamp-2 h-8">
-                                        {{ unit.config.description || 'Bu birliğin detaylı açıklaması burada yer alacak.' }}
-                                    </p>
-
-                                    <div class="flex items-center justify-between gap-2 text-sm bg-muted/30 p-2 rounded-lg border border-border/30">
-                                        <div class="flex items-center gap-1.5" [class.text-red-500]="village!.resources.woodAmount < unit.config.woodCost">
-                                            <lucide-icon name="tree-deciduous" class="h-3 w-3"></lucide-icon>
-                                            <span>{{ unit.config.woodCost }}</span>
-                                        </div>
-                                        <div class="flex items-center gap-1.5" [class.text-red-500]="village!.resources.meatAmount < unit.config.meatCost">
-                                            <lucide-icon name="beef" class="h-3 w-3"></lucide-icon>
-                                            <span>{{ unit.config.meatCost }}</span>
-                                        </div>
-                                        <div class="flex items-center gap-1.5" [class.text-red-500]="village!.resources.ironAmount < unit.config.ironCost">
-                                            <lucide-icon name="pickaxe" class="h-3 w-3"></lucide-icon>
-                                            <span>{{ unit.config.ironCost }}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="flex items-center gap-1.5 text-xs text-muted-foreground justify-center">
-                                        <lucide-icon name="timer" class="h-3 w-3"></lucide-icon>
-                                        <span>{{ unit.config.researchTime || 600 }} sn.</span>
-                                    </div>
-
-                                    <button (click)="handleResearch(unit.type)"
-                                            [disabled]="researchingTech === unit.type || !canAffordResearch(unit.config)"
-                                            class="w-full relative overflow-hidden bg-secondary hover:bg-primary hover:text-primary-foreground text-secondary-foreground py-2 rounded-md font-medium text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed group-hover:shadow-md">
-
-                        <span *ngIf="researchingTech !== unit.type" class="flex items-center justify-center gap-2">
-                            <lucide-icon *ngIf="getTechLevel(unit.type) === 0" name="flask-conical" class="h-4 w-4"></lucide-icon>
-                            <lucide-icon *ngIf="getTechLevel(unit.type) > 0" name="arrow-up-circle" class="h-4 w-4"></lucide-icon>
-                            {{ getTechLevel(unit.type) === 0 ? 'Araştır' : 'Geliştir' }}
-                        </span>
-
-                                        <span *ngIf="researchingTech === unit.type" class="flex items-center justify-center gap-2">
-                            <lucide-icon name="loader-2" class="h-4 w-4 animate-spin"></lucide-icon>
-                            İşleniyor...
-                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                    <div *ngIf="getBuildingLevel('smithy') > 0">
+                        <p class="text-center text-muted-foreground">Araştırma birimleri burada listelenecek...</p>
                     </div>
                 </div>
 
-                <div *ngSwitchCase="'army'" class="p-8 text-center bg-card border border-border rounded-xl">
-                    <lucide-icon name="sword" class="h-12 w-12 mx-auto mb-4 text-muted-foreground"></lucide-icon>
-                    <h3 class="text-lg font-semibold">İçtima Meydanı</h3>
-                    <p class="text-muted-foreground">Birlikler burada eğitilecek. (UnitCard & RecruitQueue)</p>
-                    <div class="mt-4 grid grid-cols-3 gap-2 text-sm">
-                        <div class="bg-muted p-2 rounded">Kışla Kuyruğu: {{ barracksQueue.length }}</div>
-                        <div class="bg-muted p-2 rounded">Ahır Kuyruğu: {{ stableQueue.length }}</div>
-                        <div class="bg-muted p-2 rounded">Atölye Kuyruğu: {{ workshopQueue.length }}</div>
+                <div *ngSwitchCase="'army'" class="animate-in fade-in duration-300">
+                    <div class="p-8 text-center bg-card border border-border rounded-xl">
+                        <lucide-icon name="sword" class="h-12 w-12 mx-auto mb-4 text-muted-foreground"></lucide-icon>
+                        <h3 class="text-lg font-semibold">İçtima Meydanı</h3>
+                        <p class="text-muted-foreground mb-4">Birlikler burada eğitilecek.</p>
                     </div>
                 </div>
 
@@ -378,10 +347,6 @@
                         [villages]="mapVillages"
                         (onNavigate)="handleNavigateToCoordinates($event.x, $event.y)">
                     </app-world-map>
-
-                    <div *ngIf="movements.length > 0" class="mt-8">
-                        <h4 class="font-bold mb-2">Askeri Hareketler</h4>
-                    </div>
                 </div>
 
             </div>
@@ -389,52 +354,38 @@
     </div>
 
     <div *ngIf="selectedBuildingInfo"
-         class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+         class="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
         <div
-            class="relative w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-2xl animate-in zoom-in-95 duration-200">
+            class="relative w-full max-w-md rounded-xl border border-amber-900/50 bg-[#1a120b] p-6 shadow-2xl animate-in zoom-in-95 duration-200 text-amber-50">
 
             <button (click)="closeBuildingInfoModal()"
-                    class="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100 transition-opacity">
-                <lucide-icon name="x" class="h-4 w-4"></lucide-icon>
+                    class="absolute right-4 top-4 opacity-70 hover:opacity-100">
+                <lucide-icon name="x" class="h-5 w-5"></lucide-icon>
             </button>
 
-            <div class="flex items-center gap-4 mb-6">
-                <div class="p-3 bg-primary/10 rounded-full ring-1 ring-primary/20">
+            <div class="flex items-center gap-4 mb-6 border-b border-amber-800/30 pb-4">
+                <div class="p-3 bg-amber-900/20 rounded-full ring-1 ring-amber-500/30">
                     <lucide-icon [name]="getIconForBuilding(selectedBuildingInfo.type)"
-                                 class="h-8 w-8 text-primary"></lucide-icon>
+                                 class="h-8 w-8 text-amber-500"></lucide-icon>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold font-cinzel">{{ selectedBuildingInfo.name }}</h3>
-                    <span
-                        class="inline-flex items-center rounded-full border border-border px-2.5 py-0.5 text-xs font-semibold">
-                        Seviye {{ selectedBuildingInfo.level }}
-                    </span>
+                    <h3 class="text-xl font-bold font-cinzel text-amber-500">{{ selectedBuildingInfo.name }}</h3>
+                    <span class="text-xs text-amber-200/60 font-mono">Seviye {{ selectedBuildingInfo.level }}</span>
                 </div>
             </div>
 
-            <div class="space-y-4">
-                <p class="text-sm text-muted-foreground leading-relaxed">
-                    {{ selectedBuildingInfo.description }}
-                </p>
+            <p class="text-sm text-amber-100/70 mb-6 leading-relaxed">
+                {{ selectedBuildingInfo.description || 'Bu bina köyünüzün gelişimi için önemlidir.' }}
+            </p>
 
-                <div *ngIf="selectedBuildingInfo.type === 'warehouse'"
-                     class="p-3 bg-muted/50 rounded-lg text-sm flex justify-between">
-                    <span>Mevcut Kapasite:</span>
-                    <span class="font-mono font-bold">{{ village?.resources?.storageCapacity | number }}</span>
-                </div>
-
-                <div *ngIf="['timberCamp', 'meatPlant', 'ironMine'].includes(selectedBuildingInfo.type)"
-                     class="p-3 bg-muted/50 rounded-lg text-sm flex justify-between">
-                    <span>Saatlik Üretim:</span>
-                    <span class="font-mono font-bold text-emerald-500">+{{ (selectedBuildingInfo.level * 30) | number }}
-                        /sa</span>
-                </div>
-            </div>
-
-            <div class="mt-6 flex justify-end">
+            <div class="flex justify-end gap-2">
+                <button (click)="activeTab = 'buildings'; closeBuildingInfoModal()"
+                        class="bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded text-sm font-medium transition-colors">
+                    Yükseltmeye Git
+                </button>
                 <button (click)="closeBuildingInfoModal()"
-                        class="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-medium hover:bg-primary/90">
-                    Tamam
+                        class="bg-transparent border border-amber-700/50 text-amber-500 hover:bg-amber-900/20 px-4 py-2 rounded text-sm font-medium transition-colors">
+                    Kapat
                 </button>
             </div>
         </div>

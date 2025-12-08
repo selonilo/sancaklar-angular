@@ -1,0 +1,20 @@
+/* Seviye Rozeti için Cam Efekti (Glassmorphism) */
+.level-badge {
+    @apply flex items-center justify-center font-bold text-white shadow-lg backdrop-blur-sm transition-all duration-300;
+    background: rgba(62, 95, 24, 0.85); /* Koyu yeşil cam */
+    border: 1px solid rgba(107, 140, 40, 0.5);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+/* Hover durumunda biraz parlasın */
+.group:hover .level-badge {
+    background: rgba(85, 128, 33, 0.95);
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(107, 140, 40, 0.6);
+}
+
+/* Font ayarları */
+.font-cinzel {
+    font-family: 'Cinzel', serif; /* Eğer import ettiysen */
+}
