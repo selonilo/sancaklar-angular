@@ -94,8 +94,8 @@
                                     class="font-bold text-foreground text-sm leading-none">{{ village.resources.woodAmount | number:'1.0-0' }}</span>
                                 <span
                                     class="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-1 rounded leading-none py-0.5">
-                    +{{ village.resources.woodHourlyProduction | number }}
-                </span>
+                                    +{{ village.resources.woodHourlyProduction | number }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -114,8 +114,8 @@
                                     class="font-bold text-foreground text-sm leading-none">{{ village.resources.meatAmount | number:'1.0-0' }}</span>
                                 <span
                                     class="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-1 rounded leading-none py-0.5">
-                    +{{ village.resources.meatHourlyProduction | number }}
-                </span>
+                                    +{{ village.resources.meatHourlyProduction | number }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -134,8 +134,8 @@
                                     class="font-bold text-foreground text-sm leading-none">{{ village.resources.ironAmount | number:'1.0-0' }}</span>
                                 <span
                                     class="text-[10px] font-medium text-emerald-600 bg-emerald-500/10 px-1 rounded leading-none py-0.5">
-                    +{{ village.resources.ironHourlyProduction | number }}
-                </span>
+                                    +{{ village.resources.ironHourlyProduction | number }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -191,7 +191,7 @@
                                 class="relative w-full select-none rounded-xl overflow-hidden shadow-2xl border-4 border-[#2e2016] bg-[#1a120b]">
 
                                 <div class="relative aspect-[1.45/1] w-full">
-                                    <img src="assets/images/overview.png"
+                                    <img src="assets/images/overview3.png"
                                          alt="Köy Genel Bakış"
                                          class="w-full h-full object-cover">
                                 </div>
@@ -272,12 +272,13 @@
                                             </div>
 
                                             <div class="flex flex-col min-w-0">
-        <span class="text-[9px] text-muted-foreground truncate leading-none mb-0.5">
-            {{ troopConfig[key]?.name }}
-        </span>
+                                                <span
+                                                    class="text-[9px] text-muted-foreground truncate leading-none mb-0.5">
+                                                    {{ troopConfig[key]?.name }}
+                                                </span>
                                                 <span class="text-xs font-bold font-mono leading-none">
-            {{ getTroopCount(key) | number }}
-        </span>
+                                                    {{ getTroopCount(key) | number }}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
@@ -319,17 +320,23 @@
                     </div>
                 </div>
 
-                <div *ngSwitchCase="'research'" class="animate-in fade-in duration-300 space-y-6">
+                <div *ngSwitchCase="'research'" class="animate-in fade-in duration-300">
+
                     <div *ngIf="getBuildingLevel('smithy') === 0"
-                         class="p-12 text-center border border-dashed border-border rounded-xl">
+                         class="p-12 text-center border border-dashed border-border rounded-xl bg-card">
                         <lucide-icon name="lock" class="h-12 w-12 mx-auto text-muted-foreground mb-4"></lucide-icon>
                         <h3 class="text-xl font-bold">Araştırma Merkezi Kilitli</h3>
-                        <p class="text-muted-foreground">Önce Demirci (Smithy) inşa etmelisin.</p>
+                        <p class="text-muted-foreground mt-2">Teknolojileri araştırmak için önce Demirci (Smithy) inşa
+                            etmelisin.</p>
                     </div>
 
                     <div *ngIf="getBuildingLevel('smithy') > 0">
-                        <p class="text-center text-muted-foreground">Araştırma birimleri burada listelenecek...</p>
+                        <app-village-research
+                            [villageId]="villageId"
+                            [resources]="village.researches">
+                        </app-village-research>
                     </div>
+
                 </div>
 
                 <div *ngSwitchCase="'army'" class="animate-in fade-in duration-300">

@@ -1,7 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ConstructionModel } from "../../../core/models/api.models";
-import { BUILDINGS_CONFIG } from "../../../features/game/game.constants";
-import { ApiService } from "../../../core/services/api.service";
+import {Component, Input, Output, EventEmitter, SimpleChanges} from '@angular/core';
+import {ConstructionModel} from "../../../core/models/api.models";
+import {BUILDINGS_CONFIG} from "../../../features/game/game.constants";
+import {ApiService} from "../../../core/services/api.service";
 
 @Component({
     selector: 'app-construction-queue',
@@ -17,11 +17,14 @@ export class ConstructionQueueComponent {
     pendingDeleteId: number | null = null;
     buildingsConfig = BUILDINGS_CONFIG;
 
-    // ApiService'i inject ediyoruz
-    constructor(private apiService: ApiService) {}
+    constructor(private apiService: ApiService) {
+    }
+
 
     formatTime(seconds: number): string {
-        if (seconds <= 0) return 'Tamamlandı';
+        if (seconds <= 0) {
+            return 'Tamamlandı';
+        }
         const h = Math.floor(seconds / 3600);
         const m = Math.floor((seconds % 3600) / 60);
         const s = seconds % 60;

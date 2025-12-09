@@ -26,37 +26,24 @@ export class GameComponent implements OnInit, OnDestroy {
     workshopQueue: UnitRecruitmentModel[] = [];
     movements: MovementTrackerModel[] = [];
 
-    // --- UI State ---
     isLoading = true;
     error = '';
     activeTab = 'overview'; // 'overview' | 'buildings' | 'research' | 'army' | 'map'
 
-    // Modal State
     selectedBuildingInfo: any = null;
 
-    // --- Loading States (Actions) ---
     upgradingBuilding: string | null = null;
-    researchingTech: string | null = null;
-    recruitingUnit: string | null = null;
 
-    // --- Timer Referansı ---
     private constructionTimer: any;
 
-    // --- Constants (Template Erişimi İçin) ---
     buildingsConfig = BUILDINGS_CONFIG;
-    techConfig = TECH_CONFIG;
-    unitConfig = UNIT_CONFIG;
 
-    // --- Helper Lists (Template Döngüleri İçin) ---
-    resourceBuildings = Object.entries(BUILDINGS_CONFIG).filter(([k, v]: any) => v.category === 'resource').map(([k]) => k);
-    militaryBuildings = Object.entries(BUILDINGS_CONFIG).filter(([k, v]: any) => v.category === 'military').map(([k]) => k);
-    infrastructureBuildings = Object.entries(BUILDINGS_CONFIG).filter(([k, v]: any) => v.category === 'infrastructure').map(([k]) => k);
-
-    troopTechs = Object.entries(TECH_CONFIG).filter(([k, v]: any) => v.category === 'troop').map(([k]) => k);
-    defenseTechs = Object.entries(TECH_CONFIG).filter(([k, v]: any) => v.category === 'defense').map(([k]) => k);
+    private resourceInterval: any;
 
     sendTroopsTarget: { x: number, y: number } | null = null;
     mapVillages: VillageMapModel[] = [];
+
+    villageId: any;
 
     constructor(
         private apiService: ApiService,
@@ -79,12 +66,53 @@ export class GameComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.stopTimer();
+        this.stopResourceTimer();
     }
 
-    // --- DATA LOADING ---
+    startResourceSimulation() {
+        // Eğer hali hazırda bir interval varsa önce temizle
+        this.stopResourceTimer();
+
+        // Her 1 saniyede (1000ms) bir çalışacak fonksiyon
+        this.resourceInterval = setInterval(() => {
+            if (this.village && this.village.resources) {
+
+                // Kolay erişim için kapasiteyi değişkene alalım
+                const capacity = this.village.resources.storageCapacity;
+
+                // --- Hesaplamalar ---
+                const woodPerSecond = this.village.resources.woodHourlyProduction / 3600;
+                const meatPerSecond = this.village.resources.meatHourlyProduction / 3600;
+                const ironPerSecond = this.village.resources.ironHourlyProduction / 3600;
+
+                this.village.resources.woodAmount = Math.min(
+                    this.village.resources.woodAmount + woodPerSecond,
+                    capacity
+                );
+
+                this.village.resources.meatAmount = Math.min(
+                    this.village.resources.meatAmount + meatPerSecond,
+                    capacity
+                );
+
+                this.village.resources.ironAmount = Math.min(
+                    this.village.resources.ironAmount + ironPerSecond,
+                    capacity
+                );
+            }
+        }, 1000);
+    }
+
+    stopResourceTimer() {
+        if (this.resourceInterval) {
+            clearInterval(this.resourceInterval);
+        }
+    }
+
 
     loadVillageData() {
         const villageId = localStorage.getItem('current_village_id');
+        this.villageId = villageId;
         const userId = localStorage.getItem('user_id');
 
         if (!villageId || !userId) {
@@ -122,6 +150,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
                 // Veri geldikten sonra sayacı başlat/yenile
                 this.startConstructionTimer();
+                this.startResourceSimulation();
             },
             error: (err) => {
                 console.error(err);
@@ -166,35 +195,6 @@ export class GameComponent implements OnInit, OnDestroy {
             },
             error: (err) => console.error(err),
             complete: () => this.upgradingBuilding = null
-        });
-    }
-
-    handleResearch(techType: string) {
-        if (!this.village) return;
-
-        this.researchingTech = techType;
-        this.apiService.startResearch({
-            villageId: this.village.id,
-            unitType: techType as any
-        }).subscribe({
-            next: () => this.loadVillageData(),
-            error: (err) => console.error(err),
-            complete: () => this.researchingTech = null
-        });
-    }
-
-    handleRecruit(unitType: string, amount: number) {
-        if (!this.village) return;
-
-        this.recruitingUnit = unitType;
-        this.apiService.recruitUnits({
-            villageId: this.village.id,
-            unitType: unitType as any,
-            amount: amount
-        }).subscribe({
-            next: () => this.loadVillageData(),
-            error: (err) => console.error(err),
-            complete: () => this.recruitingUnit = null
         });
     }
 
@@ -268,45 +268,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
     handleNavigateToCoordinates(x: number, y: number) {
         console.log(`Harita Hedefi Seçildi: ${x}|${y}`);
-
-        // Hedef koordinatı set ediyoruz.
-        // HTML tarafında *ngIf="sendTroopsTarget" olan bir dialog varsa o açılacaktır.
         this.sendTroopsTarget = { x, y };
-    }
-
-    // Dialog kapatma fonksiyonu (İleride dialog component'i yapınca lazım olacak)
-    onSendTroopsClose() {
-        this.sendTroopsTarget = null;
-    }
-
-    // Dialog işlemi başarılı biterse (Asker gönderilirse)
-    onSendTroopsSuccess() {
-        this.sendTroopsTarget = null;
-        this.loadVillageData(); // Verileri tazele (Hareketleri güncellemek için)
-    }
-
-    // 1. Demirci kontrolü için getter
-    get hasSmithy(): boolean {
-        return this.getBuildingLevel('smithy') > 0;
-    }
-
-    get researchableUnits(): Array<{type: string, config: any}> {
-        // Sadece askeri birlikleri filtreleyip döndürüyoruz
-        return Object.entries(this.unitConfig)
-            .filter(([key, val]: any) => key !== 'WALL') // Duvar araştırılmaz, inşa edilir
-            .map(([key, val]) => ({ type: key, config: val }));
-    }
-
-    getTechLevel(unitType: string): number {
-        // techLevels objesinden veya 0
-        return this.techLevels && this.techLevels[unitType] ? this.techLevels[unitType] : 0;
-    }
-
-    canAffordResearch(cost: { wood: number, meat: number, iron: number }): boolean {
-        if (!this.village) return false;
-        return this.village.resources.woodAmount >= cost.wood &&
-            this.village.resources.meatAmount >= cost.meat &&
-            this.village.resources.ironAmount >= cost.iron;
     }
 
     buildingPositions: { [key: string]: { left: number; top: number; width: number; height: number } } = {
@@ -331,7 +293,7 @@ export class GameComponent implements OnInit, OnDestroy {
         'headquarters': { left: 62, top: 25, width: 12, height: 12 },
 
         // 6. Sol Taraf: Depo (Uzun bina)
-        'warehouse':    { left: 28, top: 42, width: 12, height: 10 },
+        'warehouse':    { left: 18, top: 40, width: 12, height: 10 },
 
         // 7. Orta Sol: Pazar (Çadırlı alan)
         'market':       { left: 45, top: 37, width: 8, height: 8 },
@@ -340,9 +302,13 @@ export class GameComponent implements OnInit, OnDestroy {
         'smithy':       { left: 38, top: 73, width: 10, height: 10 },
 
         // 9. Sağ Alt İç: Kışla
-        'barracks':     { left: 75, top: 57, width: 12, height: 12 },
+        'barracks':     { left: 75, top: 40, width: 12, height: 12 },
 
-        'wall':     { left: 75, top: 90, width: 12, height: 12 },
+        'wall':     { left: 73, top: 87, width: 12, height: 12 },
+
+        'stable':     { left: 70, top: 65, width: 12, height: 12 },
+
+        'workshop':     { left: 20, top: 60, width: 12, height: 12 },
 
         // NOT: 'stable' (Ahır), 'workshop' (Atölye) ve 'academy' (Akademi) için
         // haritada boş bir yer belirleyip buraya ekleyebilirsin.

@@ -9,8 +9,8 @@ export const BUILDINGS_CONFIG: any = {
   timberCamp: { name: 'Odun Kampı', category: 'resource' },
   meatPlant: { name: 'Et Tesisi', category: 'resource' },
   ironMine: { name: 'Demir Madeni', category: 'resource' },
-  farm: { name: 'Çiftlik', category: 'resource' },
-  warehouse: { name: 'Depo', category: 'infrastructure' },
+  farm: { name: 'Çiftlik', category: 'infrastructure' },
+  warehouse: { name: 'Depo', category: 'resource' },
   wall: { name: 'Sur', category: 'military' }
 };
 
