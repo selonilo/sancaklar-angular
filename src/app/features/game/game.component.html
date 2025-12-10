@@ -346,11 +346,26 @@
                 </div>
 
                 <div *ngSwitchCase="'army'" class="animate-in fade-in duration-300">
-                    <div class="p-8 text-center bg-card border border-border rounded-xl">
-                        <lucide-icon name="sword" class="h-12 w-12 mx-auto mb-4 text-muted-foreground"></lucide-icon>
-                        <h3 class="text-lg font-semibold">İçtima Meydanı</h3>
-                        <p class="text-muted-foreground mb-4">Birlikler burada eğitilecek.</p>
+
+                    <div class="p-6 text-center bg-card border border-border rounded-xl mb-6 shadow-sm">
+                        <div class="h-14 w-14 bg-primary/10 text-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <lucide-icon name="sword" class="h-7 w-7"></lucide-icon>
+                        </div>
+                        <h3 class="text-xl font-bold tracking-tight">İçtima Meydanı</h3>
+                        <p class="text-sm text-muted-foreground mt-1">
+                            Ordunu buradan yönet. Kışla, Ahır ve Atölye üretimlerini tek yerden planla.
+                        </p>
                     </div>
+
+                    <app-army-recruitment
+                        [villageId]="villageId"
+                        [resources]="village.resources"
+                        [techLevels]="techLevels"
+                        [barracksQueue]="barracksQueue"
+                        [stableQueue]="stableQueue"
+                        [workshopQueue]="workshopQueue">
+                    </app-army-recruitment>
+
                 </div>
 
                 <div *ngSwitchCase="'map'" class="space-y-6 animate-in fade-in duration-300">

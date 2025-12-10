@@ -13,12 +13,13 @@ import {
     TreeDeciduous, Beef, Pickaxe, Wheat, Clock, Info, TreePine, Skull,
     Anvil, GraduationCap, Pencil, Eye, Crosshair, Axe, ShieldCheck,
     Magnet, MapPin, Star, Save, Crown, Target, Feather, Drumstick,
-    Coins, Warehouse, Mountain, Trash2, Hourglass, Timer, Check
+    Coins, Warehouse, Mountain, Trash2, Hourglass, Timer, Check, Dog
 } from 'lucide-angular';
 import {ConstructionQueueComponent} from "./components/construction-queue/construction-queue.component";
 import { WorldMapComponent } from './components/world-map/world-map.component';
 import {VillageResearchComponent} from "./components/research/village-research.component";
 import {VillageResearchQueueComponent} from "./components/research-queue/village-research-queue.component";
+import {ArmyRecruitmentComponent} from "./components/army-recruitment/army-recruitment.component";
 
 @NgModule({
     declarations: [
@@ -26,7 +27,8 @@ import {VillageResearchQueueComponent} from "./components/research-queue/village
         ConstructionQueueComponent,
         WorldMapComponent,
         VillageResearchComponent,
-        VillageResearchQueueComponent
+        VillageResearchQueueComponent,
+        ArmyRecruitmentComponent
     ],
     imports: [
         CommonModule,
@@ -41,7 +43,7 @@ import {VillageResearchQueueComponent} from "./components/research-queue/village
             X, CheckCircle, Zap, Globe, Users, Swords, Feather,
             Anvil, GraduationCap, Trash2, TreePine,BrickWall,
             Magnet, Mountain, Hourglass, Info, ShieldCheck, Drumstick,
-            Coins, Warehouse, MapPin, Star, Save, Timer, Pencil, Check
+            Coins, Warehouse, MapPin, Star, Save, Timer, Pencil, Check, Dog
         })
     ],
     exports: [
@@ -54,7 +56,8 @@ import {VillageResearchQueueComponent} from "./components/research-queue/village
         ConstructionQueueComponent,
         WorldMapComponent,
         VillageResearchComponent,
-        VillageResearchQueueComponent
+        VillageResearchQueueComponent,
+        ArmyRecruitmentComponent
     ]
 })
 export class SharedModule {
