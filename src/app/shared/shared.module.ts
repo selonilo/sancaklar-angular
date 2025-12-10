@@ -12,19 +12,21 @@ import {
     ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Dices, Swords,BrickWall,
     TreeDeciduous, Beef, Pickaxe, Wheat, Clock, Info, TreePine, Skull,
     Anvil, GraduationCap, Pencil, Eye, Crosshair, Axe, ShieldCheck,
-    Magnet, MapPin, Star, Save, Crown, Target, Feather,
-    Coins, Warehouse, Mountain, Trash2, Hourglass, Timer
+    Magnet, MapPin, Star, Save, Crown, Target, Feather, Drumstick,
+    Coins, Warehouse, Mountain, Trash2, Hourglass, Timer, Check
 } from 'lucide-angular';
 import {ConstructionQueueComponent} from "./components/construction-queue/construction-queue.component";
 import { WorldMapComponent } from './components/world-map/world-map.component';
 import {VillageResearchComponent} from "./components/research/village-research.component";
+import {VillageResearchQueueComponent} from "./components/research-queue/village-research-queue.component";
 
 @NgModule({
     declarations: [
         BuildingCardComponent,
         ConstructionQueueComponent,
         WorldMapComponent,
-        VillageResearchComponent
+        VillageResearchComponent,
+        VillageResearchQueueComponent
     ],
     imports: [
         CommonModule,
@@ -38,8 +40,8 @@ import {VillageResearchComponent} from "./components/research/village-research.c
             ArrowUp, ArrowDown, ArrowLeft, ArrowRight, Dices, Skull,
             X, CheckCircle, Zap, Globe, Users, Swords, Feather,
             Anvil, GraduationCap, Trash2, TreePine,BrickWall,
-            Magnet, Mountain, Hourglass, Info, ShieldCheck,
-            Coins, Warehouse, MapPin, Star, Save, Timer, Pencil
+            Magnet, Mountain, Hourglass, Info, ShieldCheck, Drumstick,
+            Coins, Warehouse, MapPin, Star, Save, Timer, Pencil, Check
         })
     ],
     exports: [
@@ -51,7 +53,8 @@ import {VillageResearchComponent} from "./components/research/village-research.c
         BuildingCardComponent,
         ConstructionQueueComponent,
         WorldMapComponent,
-        VillageResearchComponent
+        VillageResearchComponent,
+        VillageResearchQueueComponent
     ]
 })
 export class SharedModule {

@@ -1,164 +1,163 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Subscription, interval } from 'rxjs';
-import * as Models from '../../../core/models/api.models';
-import {ApiService} from "../../../core/services/api.service";
+import {Component, Input, OnInit, OnDestroy, SimpleChanges, OnChanges, Output, EventEmitter} from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
+import { ResearchQueueModel, ResearchRequest } from '../../../core/models/api.models';
 
+// Teknoloji Tanımları (Statik Bilgi)
 interface TechDefinition {
-    key: string;
+    key: string;      // Enum ile aynı (SPEARMAN, SWORDSMAN vs.)
     name: string;
     description: string;
-    icon: string;
+    icon: string;     // Lucide icon name
 }
 
+// Bina Gereksinimleri (Mapping)
+const UNIT_REQUIREMENTS: { [key: string]: { building: string, name: string } } = {
+    'SPEARMAN': { building: 'barracks', name: 'Kışla' },
+    'SWORDSMAN': { building: 'barracks', name: 'Kışla' },
+    'AXEMAN': { building: 'barracks', name: 'Kışla' },
+    'ARCHER': { building: 'barracks', name: 'Kışla' },
+    'SCOUT': { building: 'stable', name: 'Ahır' },
+    'LIGHT_CAVALRY': { building: 'stable', name: 'Ahır' },
+    'HEAVY_CAVALRY': { building: 'stable', name: 'Ahır' },
+    'RAM': { building: 'workshop', name: 'Atölye' },
+    'CATAPULT': { building: 'workshop', name: 'Atölye' },
+    'CONQUEROR': { building: 'academy', name: 'Akademi' }
+};
+
 const TECH_CONFIG: TechDefinition[] = [
-    {
-        key: 'SPEARMAN',
-        name: 'Mızrakçı',
-        description: 'Atlılara karşı son derece etkili temel savunma birimi.',
-        icon: 'swords' // Alternatif: 'divide' (mızrak gibi durabilir)
-    },
-    {
-        key: 'SWORDSMAN',
-        name: 'Kılıç Ustası',
-        description: 'Piyadelere karşı güçlü zırha sahip savunma birimi.',
-        icon: 'shield'
-    },
-    {
-        key: 'AXEMAN',
-        name: 'Baltacı',
-        description: 'Yüksek saldırı gücüne sahip, ancak savunması zayıf piyade.',
-        icon: 'axe'
-    },
-    {
-        key: 'ARCHER',
-        name: 'Okçu',
-        description: 'Hem piyadelere hem atlılara karşı dengeli savunma sağlar.',
-        icon: 'target' // Veya 'crosshair'
-    },
-    {
-        key: 'SCOUT',
-        name: 'Casus',
-        description: 'Düşman köylerindeki birimleri, binaları ve kaynakları gözetler.',
-        icon: 'eye'
-    },
-    {
-        key: 'LIGHT_CAVALRY',
-        name: 'Hafif Atlı',
-        description: 'Çok hızlı hareket eder. Kaynak yağmalamak için idealdir.',
-        icon: 'zap' // Hızı temsilen
-    },
-    {
-        key: 'HEAVY_CAVALRY',
-        name: 'Ağır Atlı',
-        description: 'Hem saldırıda hem savunmada güçlü, ağır zırhlı atlı birim.',
-        icon: 'shield-check'
-    },
-    {
-        key: 'RAM',
-        name: 'Şahmerdan',
-        description: 'Saldırı sırasında düşman surlarına hasar vererek savunmayı kırar.',
-        icon: 'hammer'
-    },
-    {
-        key: 'CATAPULT',
-        name: 'Mancınık',
-        description: 'Düşman binalarını yıkarak köyün gelişimini engeller.',
-        icon: 'skull' // Yıkımı temsilen
-    },
-    {
-        key: 'CONQUEROR',
-        name: 'Misyoner',
-        description: 'Düşman köyünün sadakatini düşürerek köyü ele geçirmenizi sağlar.',
-        icon: 'crown'
-    }
-    // Not: WALL genelde "Building" (Bina) olarak geçer ama
-    // eğer teknoloji ağacında sur geliştirmesi varsa buraya ekleyebiliriz:
-    // { key: 'WALL', name: 'Sur Teknolojisi', description: '...', icon: 'brick-wall' }
+    { key: 'SPEARMAN', name: 'Mızrakçı', description: 'Atlılara karşı etkili temel savunma.', icon: 'sword' }, // lucide 'swords' yoksa 'sword'
+    { key: 'SWORDSMAN', name: 'Kılıç Ustası', description: 'Piyadelere karşı güçlü zırhlı birim.', icon: 'shield' },
+    { key: 'AXEMAN', name: 'Baltacı', description: 'Yüksek saldırı gücüne sahip piyade.', icon: 'axe' },
+    { key: 'ARCHER', name: 'Okçu', description: 'Dengeli savunma sağlayan menzilli birim.', icon: 'crosshair' },
+    { key: 'SCOUT', name: 'Casus', description: 'Düşman köylerini gözetler.', icon: 'eye' },
+    { key: 'LIGHT_CAVALRY', name: 'Hafif Atlı', description: 'Hızlı hareket eder, yağma için idealdir.', icon: 'zap' },
+    { key: 'HEAVY_CAVALRY', name: 'Ağır Atlı', description: 'Zırhlı ve güçlü atlı birim.', icon: 'shield-check' },
+    { key: 'RAM', name: 'Şahmerdan', description: 'Surları yıkar.', icon: 'hammer' },
+    { key: 'CATAPULT', name: 'Mancınık', description: 'Binaları yıkar.', icon: 'skull' },
+    { key: 'CONQUEROR', name: 'Misyoner', description: 'Köyleri fetheder.', icon: 'crown' }
 ];
 
 @Component({
     selector: 'app-village-research',
     templateUrl: './village-research.component.html',
 })
-export class VillageResearchComponent implements OnInit, OnDestroy {
+export class VillageResearchComponent implements OnInit, OnChanges {
     @Input() villageId!: number;
-    @Input() resources: any; // { wood: 100, clay: 100, iron: 100 } gibi
+    @Input() buildings: any;
+    @Input() researchInfo: any;
+    @Output() researchStarted = new EventEmitter();
 
-    queue: Models.ResearchQueueModel[] = [];
-    techLevels: any = {}; // { spear: 1, sword: 0 ... }
+    queue: ResearchQueueModel[] = [];
     loading = false;
-
     techList = TECH_CONFIG;
-    private timerSub: Subscription | null = null;
 
     constructor(private gameService: ApiService) {}
 
     ngOnInit(): void {
-        this.loadData();
-
-        // Kuyruk varsa zamanı güncellemek için basit bir interval
-        this.timerSub = interval(1000).subscribe(() => {
-            // Geri sayım mantığı buraya eklenebilir (UI'da pipe ile de çözülebilir)
-        });
+        this.loadQueue();
     }
 
-    ngOnDestroy(): void {
-        if (this.timerSub) this.timerSub.unsubscribe();
+    ngOnChanges(changes: SimpleChanges): void {
+        // Eğer parent component'ten veri değişirse tetiklenir
     }
 
-    loadData(): void {
-        this.loading = true;
+    loadQueue(): void {
+        this.gameService.getResearchQueue(this.villageId).subscribe(q => this.queue = q);
+    }
 
-        // Mevcut Seviyeleri Çek
-        this.gameService.getTechnologyLevels(this.villageId).subscribe(levels => {
-            this.techLevels = levels;
-            this.loading = false;
-        });
+    // --- MANTIK METOTLARI ---
 
-        // Araştırma Kuyruğunu Çek
-        this.gameService.getResearchQueue(this.villageId).subscribe(queue => {
-            this.queue = queue;
-        });
+    // 1. Bina şartı sağlanıyor mu?
+    isBuildingMet(techKey: string): boolean {
+        const req = UNIT_REQUIREMENTS[techKey];
+        if (!req) return true; // Şart yoksa true
+        // buildings objesinde ilgili bina 0'dan büyükse var demektir
+        const buildingLevel = this.buildings ? this.buildings[req.building] : 0;
+        return buildingLevel > 0;
+    }
+
+    // 2. Gereken binanın adını getir
+    getRequiredBuildingName(techKey: string): string {
+        return UNIT_REQUIREMENTS[techKey]?.name || '';
+    }
+
+    // 3. Maliyetleri ResearchInfo (Backend Model) içinden çek
+    // Backend field isimleri (camelCase) ile Enum keyleri eşleşmeli
+    getCostData(techKey: string) {
+        if (!this.researchInfo) return { wood: 0, meat: 0, iron: 0, duration: 0 };
+
+        // Enum: SPEARMAN -> Field: spearmanWood, spearmanDuration
+        // Dönüşüm: TitleCase yapıp "Wood", "Meat" ekliyoruz.
+        // Basit bir mapleme mantığı:
+        const prefix = this.toCamelCase(techKey); // SPEARMAN -> spearman
+
+        return {
+            wood: this.researchInfo[prefix + 'Wood'] || 0,
+            meat: this.researchInfo[prefix + 'Meat'] || 0, // Backend'de 'Meat' mi 'Clay' mi dikkat et
+            iron: this.researchInfo[prefix + 'Iron'] || 0,
+            duration: this.researchInfo[prefix + 'Duration'] || 0
+        };
+    }
+
+    // Helper: CONQUEROR -> conqueror, LIGHT_CAVALRY -> lightCavalry
+    private toCamelCase(str: string): string {
+        return str.toLowerCase().replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+    }
+
+    getLevel(techKey: string): number {
+        return this.researchInfo[techKey.toLowerCase()] || 0;
+    }
+
+    isInQueue(techKey: string): boolean {
+        return this.queue.some(q => q.unitType === techKey);
     }
 
     startResearch(techKey: any): void {
-        const request: Models.ResearchRequest = {
+        if (!this.isBuildingMet(techKey)) return;
+
+        this.loading = true;
+        const request: ResearchRequest = {
             villageId: this.villageId,
             unitType: techKey
         };
 
         this.gameService.startResearch(request).subscribe({
             next: (newItem) => {
-                // Başarılı olduğunda kuyruğa ekle ve kaynakları güncelle (Parent'a emit edilebilir)
-                this.queue.push(newItem);
-                // Toast notification eklenebilir: "Araştırma başladı!"
+                this.researchStarted.emit();
+                this.loading = false;
             },
-            error: (err) => {
-                console.error("Araştırma başlatılamadı", err);
-            }
+            error: () => this.loading = false
         });
     }
 
-    // Bir teknoloji şu an kuyrukta mı?
-    isInQueue(techKey: string): boolean {
-        return this.queue.some(q => q.unitType === techKey);
+    formatDuration(totalSeconds: number): string {
+        if (!totalSeconds) return '0sn';
+
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+
+        // Eğer 1 saatten uzun sürüyorsa (Örn: Fetihçi)
+        if (h > 0) {
+            return `${h}sa ${m}dk`; // Saat işin içine girince saniye detayına gerek kalmaz genelde
+        }
+
+        // Sadece saniye varsa (Örn: 45sn)
+        if (m === 0) {
+            return `${s}sn`;
+        }
+
+        // Dakika ve saniye (Örn: 12dk 30sn)
+        return `${m}dk ${s}sn`;
     }
 
-    // Şu anki seviyeyi getir
-    getLevel(techKey: string): number {
-        return this.techLevels[techKey] || 0;
-    }
+    isResearched(techKey: string): boolean {
+        if (!this.researchInfo) return false;
 
-    // Örnek maliyet hesaplama (Normalde sunucudan gelmeli veya sabit bir tabloda olmalı)
-    getCost(techKey: string, currentLevel: number) {
-        // Basit bir çarpan mantığı (Örnek)
-        const base = 500;
-        const factor = currentLevel + 1;
-        return {
-            wood: base * factor,
-            clay: base * factor,
-            iron: base * factor,
-            time: 30 * factor // dakika
-        };
+        // TechKey: ARCHER -> propName: archer
+        const propName = this.toCamelCase(techKey);
+
+        // Eğer değer 1 (veya true) ise araştırılmış demektir
+        return this.researchInfo[propName] === 1;
     }
 }

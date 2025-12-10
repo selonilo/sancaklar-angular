@@ -1,0 +1,71 @@
+<div *ngIf="displayQueue.length > 0"
+     class="bg-card border border-border rounded-xl shadow-sm overflow-hidden animate-in slide-in-from-top-2 duration-300">
+
+    <div class="bg-muted/30 px-4 py-2 border-b border-border flex items-center justify-between">
+        <h4 class="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+            <lucide-icon name="flask-conical" class="h-3.5 w-3.5"></lucide-icon>
+            Araştırma Kuyruğu
+        </h4>
+        <span class="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-bold">
+            {{ displayQueue.length }} İşlem
+        </span>
+    </div>
+
+    <div class="divide-y divide-border/50">
+        <div *ngFor="let item of displayQueue" class="p-3 bg-card hover:bg-muted/20 transition-colors group relative">
+
+            <div class="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-1000 ease-linear"
+                 [style.width.%]="item.progress"></div>
+
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-3">
+                    <div class="relative h-10 w-10 bg-background rounded-lg flex items-center justify-center border border-border shadow-sm group-hover:border-primary/40 transition-colors">
+                        <lucide-icon [name]="item.icon" class="h-5 w-5 text-primary animate-pulse"></lucide-icon>
+
+                        <div class="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full border-2 border-background animate-bounce"
+                             *ngIf="item.progress >= 99"></div>
+                    </div>
+
+                    <div>
+                        <div class="font-bold text-sm text-foreground flex items-center gap-2">
+                            {{ item.unitType | titlecase }}
+                            <span class="text-[10px] text-muted-foreground font-normal border border-border px-1 rounded">
+                                Lvl Up
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs text-muted-foreground mt-0.5">
+                            <span class="font-mono text-primary font-medium">
+                                {{ item.progress | number:'1.0-0' }}%
+                            </span>
+                            <span>Tamamlandı</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="text-right">
+                        <div class="text-sm font-mono font-bold text-foreground tabular-nums">
+                            {{ formatTime(item.liveRemaining) }}
+                        </div>
+                        <div class="text-[10px] text-muted-foreground flex items-center justify-end gap-1">
+                            <lucide-icon name="clock" class="h-3 w-3"></lucide-icon>
+                            Bitiş: {{ item.completionTime | date:'HH:mm' }}
+                        </div>
+                    </div>
+
+                    <button class="h-8 w-8 flex items-center justify-center rounded-full hover:bg-destructive/10 hover:text-destructive text-muted-foreground transition-colors"
+                            title="İptal Et">
+                        <lucide-icon name="x" class="h-4 w-4"></lucide-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div class="w-full bg-secondary/50 h-1.5 rounded-full overflow-hidden mt-1">
+                <div class="bg-primary h-full transition-all duration-1000 ease-linear rounded-full shadow-[0_0_10px_rgba(var(--primary),0.5)]"
+                     [style.width.%]="item.progress">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

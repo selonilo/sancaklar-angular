@@ -204,16 +204,16 @@ export interface VillageTroopsModel {
 }
 
 export interface VillageResearchesModel {
-    spearmen: number;
-    swordsmen: number;
-    axemen: number;
-    archers: number;
-    scouts: number;
+    spearman: number;
+    swordsman: number;
+    axeman: number;
+    archer: number;
+    scout: number;
     lightCavalry: number;
     heavyCavalry: number;
-    rams: number;
-    catapults: number;
-    conquerors: number;
+    ram: number;
+    catapult: number;
+    conqueror: number;
 }
 
 export interface VillageModel {

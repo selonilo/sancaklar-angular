@@ -331,9 +331,15 @@
                     </div>
 
                     <div *ngIf="getBuildingLevel('smithy') > 0">
+                        <app-village-research-queue
+                            [queue]="researches"
+                            class="block mb-6">
+                        </app-village-research-queue>
                         <app-village-research
+                            (researchStarted)="loadVillageData()"
                             [villageId]="villageId"
-                            [resources]="village.researches">
+                            [researchInfo]="village.researches"
+                            [buildings]="village.buildings">
                         </app-village-research>
                     </div>
 
